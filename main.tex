@@ -1,0 +1,64 @@
+\documentclass{SGGW-thesis}
+
+\INZYNIERSKAtrue
+\WZIMtrue
+
+\title{Porównanie aplikacji frontendowych opartych na mikrofrontendach z tradycyjną architekturą monolityczną na przykładzie aplikacji do zarządzania finansami osobistymi}
+\Etitle{Comparison of microfrontend applications and monolith frontend applications based on the example of expense tracker }
+\author{Dawid Wijata}
+\date{2022}
+\album{205006}
+\thesis{Praca dyplomowa na kierunku:}
+\course{Informatyka}
+\promotor{dr \ inż.\ Piotra Wrzeciono}
+\pworkplace{Instytut Informatyki Technicznej\\Katedra Systemów Informacyjnych}
+\usepackage{hyperref}
+
+\begin{document}
+\maketitle
+\statementpage
+\abstractpage
+{Stworzenie klasy \LaTeX-owej do użytku przy pisaniu pracy dyplomowej w SGGW}
+{Tematem niniejszej pracy było zaimplementowanie klasy \LaTeX-owej pozwalającej na formatowanie tekstu zgodnie z wytycznymi nałożonymi przez uczelnię. Praca zawiera dwie
+główne części. Pierwsza z nich zawiera opis najważniejszych aspektów implementacji klasy. Natomiast druga część skupia się na sposobie użycia klasy przez osoby piszące prace
+dyplomowe.}
+{LaTeX, klasa, praca dyplomowa, implementacja, SGGW, Szkoła Główna Gospodarstwa Wiejskiego}
+{Creation of the \LaTeX\ Class to be Used When Writing a Thesis at the Warsaw University of Life Sciences -- SGGW}
+{The subject of this study was to implement a \LaTeX\ class that allows for text formatting according to the guidelines imposed by the University. The work consists of two
+main parts. The first one describes the most important aspects of the implementation. The second part focuses on how to use the class by people writing the theses.}
+{LaTeX, class, thesis, implementation, SGGW, Warsaw University of Life Sciences}
+
+
+{
+  % Spis treści może być złożony z pojedynczą interlinią, np. jeśli jedna linia wychodzi na następną stronę.
+  % W przeciwnym razie spis treści wstawić bez powyższego rozkazu i klamry.
+  \doublespacing
+  \tableofcontents
+}
+
+\startchapterfromoddpage % niezależnie od długości spisu treści pierwszy rozdział zacznie się na nieparzystej stronie
+
+\chapter{Testowy rozdział}
+Pisanie pracy dyplomowej oprócz oczywistego aspektu przekazywania informacji wiąże się także z odpowiednim sformatowaniem wynikowego tekstu według zasad narzuconych przez
+uczelnię. 
+
+
+\begin{thebibliography}{9}
+\bibitem{wymagania}
+\textit{Zarządzenie nr 34 Rektora Szkoły Głównej Gospodarstwa Wiejskiego w Warszawie z dnia 01 czerwca 2016 r.\ w~ sprawie wprowadzenia ,,Wytycznych dotyczących
+przygotowywania prac dyplomowych w~Szkole Głównej Gospodarstwa Wiejskiego w Warszawie''}, Załączniki 1 i~2
+\url{https://www.sggw.pl/dla-studentow/informacje-formalno-prawne/dokumenty-do-pobrania}
+$\rightarrow$ Praca dyplomowa (dostęp: 04.01.2017)
+\bibitem{latexclass}
+\textit{\LaTeXe\ for class and package writers} \url{http://www.latex-project.org/help/documentation/} $\rightarrow$ LaTeX2e for class... (dostęp 04.01.2017)
+\bibitem{latexcompanion}
+Frank Mittelbach and Michel Goossens with Johannes Braams, David Carlisle and Chris Rowley,
+\textit{The \LaTeX\ Companion}. Second Edition,
+Addison-Wesley, 2004.
+\bibitem{tds}
+\textit{A Directory Structure for \TeX\ Files} \url{http://tug.org/tds/tds.html} (dostęp 11.01.2017)
+\end{thebibliography}
+
+\beforelastpage
+
+\end{document}
