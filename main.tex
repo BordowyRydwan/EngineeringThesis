@@ -3,6 +3,8 @@
 \INZYNIERSKAtrue
 \WZIMtrue
 
+\listfiles
+
 \title{Porównanie aplikacji frontendowych opartych na mikrofrontendach z tradycyjną architekturą monolityczną na przykładzie aplikacji do zarządzania finansami osobistymi}
 \Etitle{Comparison of microfrontend applications and monolith frontend applications based on the example of expense tracker }
 \author{Dawid Wijata}
@@ -12,7 +14,10 @@
 \course{Informatyka}
 \promotor{dr \ inż.\ Piotra Wrzeciono}
 \pworkplace{Instytut Informatyki Technicznej\\Katedra Systemów Informacyjnych}
+
 \usepackage{hyperref}
+\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
+\addbibresource{refs.bib}
 
 \begin{document}
 \maketitle
@@ -61,7 +66,6 @@ main parts. The first one describes the most important aspects of the implementa
 \chapter{Opis badanych frontendów}
   \section{Dobór technologii do projektów}
   \section{Wersja monolityczna}
-    dwqlkdjqwkdwqlkd\cite{fowler_2019}
   \section{Wersja mikroserwisowa}
 
 \chapter{Porównanie projektów frontendowych}
@@ -76,8 +80,7 @@ main parts. The first one describes the most important aspects of the implementa
 \chapter{Podsumowanie}
 
 \nocite{*}
-\bibliographystyle{ieeetr}
-\bibliography{refs}
+\printbibliography[heading=bibnumbered,title={Bibliografia}]
 
 \beforelastpage
 
