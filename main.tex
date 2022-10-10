@@ -76,19 +76,19 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
   \end{itemize}
 
   Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie jak zachować wierność odwzorowania środowiska z wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie. 
-  Istnieje też narzędzie \textit{docker-compose} umożliwiające uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu. Przyspiesza to znacząco proces uruchamiania środowiska.
+  Razem z narzędziem Docker, użyto też narzędzia \textit{docker-compose}, które umożliwia uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu.
 
   Opisane technologie mogą też być komfortowo używane w połączeniu z oprogramowaniem Docker służącym do konteneryzacji. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET oraz połączeniem z bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku konfiguracyjnego o nazwie Dockerfile.
 
   \section{Szablony projektów}
   W celu zapewnienia skalowalności oraz łatwego tworzenia nowych serwisów, na potrzeby projektu opracowano dwa szablony projektu - zawierający wstępną autentykację użytkownika poprzez sprawdzanie zawartości nagłówka HTTP oraz taki, który jej nie zawiera.
 
-  Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia nowego rozwiązania Visual Studio zawierającego ustawienia dla testów jednostkowych i integracyjnych aplikacji, ustawienia plików Dockerfile i docker-compose.yml, oraz ściśle określonego rozłożenia projektów w rozwiązaniu. Zapewnia to spójność kodu w zakresie całej aplikacji. W przypadku, gdyby nad kodem pojedynczego serwisu pracowało kilku programistów (co jest częste w praktyce komercyjnej), mają oni ściśle narzuconą przez szablon strukturę kodu i podstawowa jego struktura zostanie zachowana. To z kolei powoduje, że wynikowo mimo tego, że nad poszczególnymi serwisami pracują różne osoby, ich struktura będzie w dużym stopniu podobna. Ma to wiele zalet w zakresie zarządzania projektami, przykładowo:
+  Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia nowego rozwiązania Visual Studio zawierającego ustawienia dla testów jednostkowych i integracyjnych aplikacji, ustawienia plików Dockerfile i docker-compose.yml, oraz ściśle określonego rozłożenia projektów w rozwiązaniu. Zapewnia to spójność kodu w zakresie całej aplikacji. W przypadku, gdyby nad kodem pojedynczego serwisu pracowało kilku programistów, mają oni ściśle narzuconą przez szablon strukturę kodu i podstawowa jego struktura zostanie zachowana. To z kolei powoduje, że wynikowo mimo tego, że nad poszczególnymi serwisami pracują różne osoby, ich struktura jest w dużym stopniu podobna. Ma to wiele zalet w zakresie zarządzania projektami, przykładowo:
 
   \begin{itemize}
     \item pozwala na szybszą aklimatyzację programistów przenoszonych między projektami, bądź takich, których rola w zespole pomaga na wsparciu istniejących projektów
     \item przyspiesza czas tworzenia nowych funkcjonalności oprogramowania
-    \item czas poświęcany na odtwórcze powtarzanie realizacji wzorca można poświęcić na ważniejsze czynnośći takie jak redukcja długu technologicznego, zwiększanie pokrycia testami, itd.
+    \item czas poświęcany na odtwórcze powtarzanie realizacji wzorca można poświęcić na ważniejsze czynności takie jak redukcja długu technologicznego, zwiększanie pokrycia testami, itd.
   \end{itemize}
 
   \section{Podział backendu na serwisy}
@@ -111,9 +111,11 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Opis badanych frontendów}
   \section{Dobór technologii do projektów}
-  Do realizacji mikrofrontendów użyto biblioteki \textit{single-spa}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyję frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
+  Do realizacji mikrofrontendów użyto biblioteki \textit{single-spa}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyto frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
 
-  Do komunikacji z serwisami backendowymi, dla obu projektów użyję 
+  Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisów wygenerowanych przez generator NSwag. Będzie to działało tak jak w przypadku klas w języku C\# generowanych na potrzeby komunikacji między serwisami backendowymi. Różnica będzie tu jedynie taka, że te klasy będą gotowymi klasami w języku TypeScript dostosowanymi do użycia we frameworku Angular.
+
+  Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań nad mikrofrontendami, użyto gotowej biblioteki z elementami wizualnymi o nazwie \textit{angular-material}. 
 
   \section{Wersja monolityczna}
   \section{Wersja mikroserwisowa}
