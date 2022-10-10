@@ -72,7 +72,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
     \item użycie paradygmatu programowania obiektowego i będący jego częścią polimorfizm, który sprzyja replikacji pojedynczego wzorca mikroserwisu
     \item będący częścią środowiska .NET framework ASP.NET realizujący architekturę REST przy niewielkim narzucie w ilości kodu
     \item istnienie wielu gotowych klas i modeli realizujących podstawowe funkcje sieciowe takie jak autoryzacja i autentykacja, komunikacja z bazą za pomocą Entity Framework
-    \item generator NSwag służący do generowania klas w języku C\# reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET
+    \item generator NSwag służący do generowania klas w językach C\# oraz TypeScript reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET
   \end{itemize}
 
   Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie jak zachować wierność odwzorowania środowiska z wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie. 
@@ -111,6 +111,10 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Opis badanych frontendów}
   \section{Dobór technologii do projektów}
+  Do realizacji mikrofrontendów użyto biblioteki \textit{single-spa}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyję frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
+
+  Do komunikacji z serwisami backendowymi, dla obu projektów użyję 
+
   \section{Wersja monolityczna}
   \section{Wersja mikroserwisowa}
 
