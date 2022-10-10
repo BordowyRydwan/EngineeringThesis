@@ -66,18 +66,17 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Opis backendu projektu}
   \section{Dobór technologii do projektu}
-  Do zrealizowania tej części projektu został wykorzystany język C# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (Long Term Support). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
+  Do zrealizowania tej części projektu został wykorzystany język C\# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (Long Term Support). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
   
   \begin{itemize}
     \item użycie paradygmatu programowania obiektowego i będący jego częścią polimorfizm, który sprzyja replikacji pojedynczego wzorca mikroserwisu
     \item będący częścią środowiska .NET framework ASP.NET realizujący architekturę REST przy niewielkim narzucie w ilości kodu
     \item istnienie wielu gotowych klas i modeli realizujących podstawowe funkcje sieciowe takie jak autoryzacja i autentykacja, komunikacja z bazą za pomocą Entity Framework
-    \item generator NSwag służący do generowania klas w języku C# reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET
+    \item generator NSwag służący do generowania klas w języku C\# reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET
   \end{itemize}
 
   Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie jak zachować wierność odwzorowania środowiska z wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie. 
-  
-  Istnieje też narzędzie \it{docker-compose} umożliwiające uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu. Przyspiesza to znacząco proces uruchamiania środowiska.
+  Istnieje też narzędzie \textit{docker-compose} umożliwiające uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu. Przyspiesza to znacząco proces uruchamiania środowiska.
 
   Opisane technologie mogą też być komfortowo używane w połączeniu z oprogramowaniem Docker służącym do konteneryzacji. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET oraz połączeniem z bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku konfiguracyjnego o nazwie Dockerfile.
 
@@ -99,7 +98,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
     Serwis z hostingiem plików odpowiada za przechowywanie wszystkich plików przekazanych aplikacji przez użytkownika. Są to między innymi zdjęcia profilowe użytkowników oraz pliki z dowodami wykonania transakcji przypisanych do konkretnych transakcji w ramach logiki domenowej. Serwis hostingu plików pozwala też na pobranie samego pliku o znanym identyfikatorze UUID oraz pobranie informacji o umieszczeniu pliku oraz konkretnych pobrań pliku.
     
     \subsection{Autoryzacja - Authorization Service}
-    Serwis odpowiada za autoryzację użytkowników oraz operacje związane z użytkownikami, które wymagają zachowania ostrożności pod kątem bezpieczeństwa aplikacji - tworzenie konta, logowanie do konta w aplikacji Midas, zmiana hasła. W tym serwisie przy logowaniu powstaje token JWT, który zapisany w ciasteczkach krąży po innych serwisach przekazywany przez nagłówek \it{Authorization} w zapytaniu HTTP. 
+    Serwis odpowiada za autoryzację użytkowników oraz operacje związane z użytkownikami, które wymagają zachowania ostrożności pod kątem bezpieczeństwa aplikacji - tworzenie konta, logowanie do konta w aplikacji Midas, zmiana hasła. W tym serwisie przy logowaniu powstaje token JWT, który zapisany w ciasteczkach krąży po innych serwisach przekazywany przez nagłówek \textit{Authorization} w zapytaniu HTTP. 
 
     \subsection{Zarządzanie użytkownikami - User Service}
     Serwis odpowiada za przechowywanie oraz umożliwienie dostępu do informacji o użytkownikach. Obsługuje on też logikę związaną z kontami użytkowników, które nie wymagają zachowania szczególnej ostrożności w zakresie bezpieczeństwa aplikacji. Przykładem takiej operacji może być zmiana zdjęcia profilowego użytkownika.
