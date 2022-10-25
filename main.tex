@@ -44,8 +44,22 @@ main parts. The first one describes the most important aspects of the implementa
 \startchapterfromoddpage % niezależnie od długości spisu treści pierwszy rozdział zacznie się na nieparzystej stronie
 
 \chapter{Wprowadzenie do mikroserwisów}
+  % tu wstęp
   \section{Architektura monolityczna}
+  Monolitem, bądź programem zaprojektowanym zgodnie z architekturą monolityczną nazywamy program uruchamiany w całości za pomocą jednego pliku wykonywalnego. W aplikacjach webowych taka architektura ma postać modelu trójwarstwowego. Na te warstwy składają się:
+  
+  \begin{enumerate}
+    \item interfejs użytkownika składający się z dokumentów HTML, arkuszy styli CSS oraz skryptów JS definiujących zachowanie interfejsu użytkownika,
+    \item warstwa API przygotowująca dane podawane do interfejsu użytkownika w celu pokazania go użytkownikowi,
+    \item warstwa dostępu do danych.
+  \end{enumerate}
+  
+  Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o \textit{modelu dwuwarstwowym}.
+  Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazały się być zbyt rozwlekłe. 
+  Zgodnie z \cite{fowler} pojęcia \textit{monolit} w odniesieniu do oprogramowania pierwotnie używała społeczność developerów systemu operacyjnego Unix. Developerzy Unixa określali tak systemy, które stają się zbyt duże. 
+
   \section{Architektura mikroserwisów}
+
   \section{Przełożenie mikroserwisów na interfejsy użytkownika}
 
 \chapter{Mikrofrontendy}
@@ -56,10 +70,10 @@ main parts. The first one describes the most important aspects of the implementa
 Na potrzeby porównania obu architektur stworzona została aplikacja do zarządzania finansami osobistymi o roboczej nazwie Midas. W założeniu odbiorcą aplikacji mają być pojedyncze osoby lub gospodarstwa domowe, które chcą zadbać o kontrolę nad swoim budżetem domowym. Głównymi funkcjonalnościami aplikacji są:
 
   \begin{itemize}
-    \item możliwość wykonywania operacji CRUD w zakresie informacji o wydatkach i przychodach poszczególnych użytkowników
-    \item system autoryzacji i uwierzytelniania spełniający aktualne normy w zakresie bezpieczeństwa aplikacji sieciowych
+    \item możliwość wykonywania operacji CRUD w zakresie informacji o wydatkach i przychodach poszczególnych użytkowników,
+    \item system autoryzacji i uwierzytelniania spełniający aktualne normy w zakresie bezpieczeństwa aplikacji sieciowych,
     \item system uprawnień w obrębie rodziny (przykładowo użytkownik o roli rodzica może edytować transakcje na kontach dzieci, a dzieci nie mogą podglądać transakcji rodziców)
-    \item przechowywanie paragonów i faktur w wersji elektronicznej i możliwość przypisania ich do konkretnej transakcji
+    \item przechowywanie paragonów i faktur w wersji elektronicznej i możliwość przypisania ich do konkretnej transakcji.
   \end{itemize}
 
 Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co zapewni wystarczającą bazę do symulowania połączeń między serwisami. Wykonanie jej w architekturze ściśle mikroserwisowej postanowi jednocześnie dobudować do tych mikroserwisów poszczególne mikrofrontendy tak, aby stanowiły one razem pełnoprawne aplikacje komunikujące się między sobą. Z drugiej strony pozwoli to też dobudować monolityczny frontend, który będzie komunikował się ze wszystkimi serwisami. Dzięki takiemu posunięciu dla obu badanych projektów - monolitycznego oraz mikrofrotendowego, zapewnione będą jednolite warunki w zakresie komunikacji z backendem, co będzie stanowiło bazę do porównania obu koncepcji architektonicznych w zakresie wydajności i dostępności.
@@ -69,10 +83,10 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
   Do zrealizowania tej części projektu został wykorzystany język C\# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (Long Term Support). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
   
   \begin{itemize}
-    \item użycie paradygmatu programowania obiektowego i będący jego częścią polimorfizm, który sprzyja replikacji pojedynczego wzorca mikroserwisu
-    \item będący częścią środowiska .NET framework ASP.NET realizujący architekturę REST przy niewielkim narzucie w ilości kodu
-    \item istnienie wielu gotowych klas i modeli realizujących podstawowe funkcje sieciowe takie jak autoryzacja i autentykacja, komunikacja z bazą za pomocą Entity Framework
-    \item generator NSwag służący do generowania klas w językach C\# oraz TypeScript reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET
+    \item użycie paradygmatu programowania obiektowego i będący jego częścią polimorfizm, który sprzyja replikacji pojedynczego wzorca mikroserwisu,
+    \item będący częścią środowiska .NET framework ASP.NET realizujący architekturę REST przy niewielkim narzucie w ilości kodu,
+    \item istnienie wielu gotowych klas i modeli realizujących podstawowe funkcje sieciowe takie jak autoryzacja i autentykacja, komunikacja z bazą za pomocą Entity Framework,
+    \item generator NSwag służący do generowania klas w językach C\# oraz TypeScript reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET.
   \end{itemize}
 
   Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie jak zachować wierność odwzorowania środowiska z wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie. 
@@ -86,8 +100,8 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
   Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia nowego rozwiązania Visual Studio zawierającego ustawienia dla testów jednostkowych i integracyjnych aplikacji, ustawienia plików Dockerfile i docker-compose.yml, oraz ściśle określonego rozłożenia projektów w rozwiązaniu. Zapewnia to spójność kodu w zakresie całej aplikacji. W przypadku, gdyby nad kodem pojedynczego serwisu pracowało kilku programistów, mają oni ściśle narzuconą przez szablon strukturę kodu i podstawowa jego struktura zostanie zachowana. To z kolei powoduje, że wynikowo mimo tego, że nad poszczególnymi serwisami pracują różne osoby, ich struktura jest w dużym stopniu podobna. Ma to wiele zalet w zakresie zarządzania projektami, przykładowo:
 
   \begin{itemize}
-    \item pozwala na szybszą aklimatyzację programistów przenoszonych między projektami, bądź takich, których rola w zespole pomaga na wsparciu istniejących projektów
-    \item przyspiesza czas tworzenia nowych funkcjonalności oprogramowania
+    \item pozwala na szybszą aklimatyzację programistów przenoszonych między projektami, bądź takich, których rola w zespole pomaga na wsparciu istniejących projektów,
+    \item przyspiesza czas tworzenia nowych funkcjonalności oprogramowania,
     \item czas poświęcany na odtwórcze powtarzanie realizacji wzorca można poświęcić na ważniejsze czynności takie jak redukcja długu technologicznego, zwiększanie pokrycia testami, itd.
   \end{itemize}
 
