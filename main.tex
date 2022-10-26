@@ -55,10 +55,24 @@ main parts. The first one describes the most important aspects of the implementa
   \end{enumerate}
   
   Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o \textit{modelu dwuwarstwowym}.
-  Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazały się być zbyt rozwlekłe. 
-  Zgodnie z \cite{fowler} pojęcia \textit{monolit} w odniesieniu do oprogramowania pierwotnie używała społeczność developerów systemu operacyjnego Unix. Developerzy Unixa określali tak systemy, które stają się zbyt duże. 
+  Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazywały się być zbyt rozwlekłe. 
+  Ponadto każda zmiana w oprogramowaniu powoduje konieczność zbudowania oraz wystawienia na środowisko produkcyjne kolejnej wersji oprogramowania, co przy dużych aplikacjach potrafi zabierać znaczącą ilość czasu. Utrudnia to też proces testowania oprogramowania, zarówno manualnie (ze względu na rosnącą ilość scenariuszy testowych) jak i automatycznie (ze względu na rosnący czas uruchomienia siatki testów).
+  Zgodnie z prawem Conwaya, takie trudności odbijają się na sposobie zarządzania organizacją, która jest producentem oprogramowania.
+  Zgodnie z \cite{fowler} pojęcia \textit{monolit} w odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unixa określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać. 
 
   \section{Architektura mikroserwisów}
+  Trudności z utrzymaniem oprogramowania, które w obrębie jednego projektu zawiera ciągle rozrastającą się logikę, spowodowały konieczność zastosowania podziału kodu na mniejsze i jednocześnie prostsze w utrzymaniu części. 
+  Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem.
+
+  Komunikacja między mikroserwisami zachodzi przy użyciu protokołów siecowych neutralnych w ujęciu technologicznym takich jak HTTP.
+  
+  Podział aplikacji na serwisy pozwala na wykonywanie prac nad konkretnymi funkcjonalnościami aplikacji bez potencjalnego ryzyka naruszenia kodu odpowiedzialnego za inne funkcjonalności. Innymi zaletami tego rozwiązania są:
+
+  \begin{enumerate}
+    \item dowolność w zastosowaniu technologii - pozwala na użycie do każdej funkcjonalności zasobów technologicznych najlepiej odpowiadających danemu zadaniu,
+    \item stabilność - ewentualne problemy z aplikacją nie powodują zatrzymania całego systemu a jedynie konkretnego serwisu,
+    \item skalowalność - nowe funkcjonalności można dodawać z nowymi serwisami, a poszczególne serwisy można rozszerzać nie naruszając logiki innych serwisów.
+  \end{enumerate}
 
   \section{Przełożenie mikroserwisów na interfejsy użytkownika}
 
@@ -67,7 +81,7 @@ main parts. The first one describes the most important aspects of the implementa
   \section{Zmiany w architekturze względem mikroserwisów}
 
 \chapter{Funkcjonalność badanej aplikacji}
-Na potrzeby porównania obu architektur stworzona została aplikacja do zarządzania finansami osobistymi o roboczej nazwie Midas. W założeniu odbiorcą aplikacji mają być pojedyncze osoby lub gospodarstwa domowe, które chcą zadbać o kontrolę nad swoim budżetem domowym. Głównymi funkcjonalnościami aplikacji są:
+Na potrzeby porównania obu architektur stworzona została aplikacja do zarządzania finansami osobistymi o roboczej nazwie Midas. W założeniu odbiorcami aplikacji mają być pojedyncze osoby lub gospodarstwa domowe, które chcą zadbać o kontrolę nad swoim budżetem domowym. Głównymi funkcjonalnościami aplikacji są:
 
   \begin{itemize}
     \item możliwość wykonywania operacji CRUD w zakresie informacji o wydatkach i przychodach poszczególnych użytkowników,
