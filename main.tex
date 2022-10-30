@@ -1,4 +1,5 @@
 \documentclass{SGGW-thesis}
+\graphicspath{ {./images/} }
 
 \INZYNIERSKAtrue
 \WZIMtrue
@@ -6,7 +7,7 @@
 \listfiles
 
 \title{Porównanie aplikacji frontendowych opartych na mikrofrontendach z tradycyjną architekturą monolityczną na przykładzie aplikacji do zarządzania finansami osobistymi}
-\Etitle{Comparison of microfrontend applications and monolith frontend applications based on the example of expense tracker }
+\Etitle{Comparison of Microfrontend Applications and Monolith Frontend Applications Based on the Example of Expense Tracker}
 \author{Dawid Wijata}
 \date{2023}
 \album{205006}
@@ -19,19 +20,21 @@
 \usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
 \addbibresource{refs.bib}
 
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
 \begin{document}
 \maketitle
 \statementpage
 \abstractpage
-{Stworzenie klasy \LaTeX-owej do użytku przy pisaniu pracy dyplomowej w SGGW}
-{Tematem niniejszej pracy było zaimplementowanie klasy \LaTeX-owej pozwalającej na formatowanie tekstu zgodnie z wytycznymi nałożonymi przez uczelnię. Praca zawiera dwie
-główne części. Pierwsza z nich zawiera opis najważniejszych aspektów implementacji klasy. Natomiast druga część skupia się na sposobie użycia klasy przez osoby piszące prace
-dyplomowe.}
-{LaTeX, klasa, praca dyplomowa, implementacja, SGGW, Szkoła Główna Gospodarstwa Wiejskiego}
-{Creation of the \LaTeX\ Class to be Used When Writing a Thesis at the Warsaw University of Life Sciences -- SGGW}
-{The subject of this study was to implement a \LaTeX\ class that allows for text formatting according to the guidelines imposed by the University. The work consists of two
-main parts. The first one describes the most important aspects of the implementation. The second part focuses on how to use the class by people writing the theses.}
-{LaTeX, class, thesis, implementation, SGGW, Warsaw University of Life Sciences}
+{Porównanie aplikacji frontendowych opartych na mikrofrontendach z tradycyjną architekturą monolityczną na przykładzie aplikacji do zarządzania finansami osobistymi}
+{Tematem niniejszej pracy była implementacja i poźniejsze porównanie frontendu dwóch wersji aplikacji do zarządzania finanasami osobistymi w dwóch architekturach - mikrofrontendowej i monolitycznej. Praca składa się z części teoretycznej wprowadzającej w pojęcie mikroserwisów i mikrofrontendów oraz części praktycznej porównującej obie implementacje pod względem metryk kodu, wydajności, kosztów obu rozwiązań oraz zarządzania projektem.}
+{architektura rozproszona, mikroserwisy, mikrofrontendy, architektura oprogramowania}
+{Comparison of Microfrontend Applications and Monolith Frontend Applications Based on the Example of Expense Tracker}
+{The subject of this thesis was to implement and compare frontend parts of expense tracker web application written in two different architectural concepts - monolith and microfrontends. The first part is an introduction to microservice and microfrontend concepts. The second one consists of a comparison of both application versions by terms of code metrics, performance, financial costs of both solutions and project management.}
+{distributed architecture, microservices, microfrontends, software architecture}
 
 
 {
@@ -46,7 +49,7 @@ main parts. The first one describes the most important aspects of the implementa
 \chapter{Wprowadzenie do mikroserwisów}
   % tu wstęp
   \section{Architektura monolityczna}
-  Monolitem, bądź programem zaprojektowanym zgodnie z architekturą monolityczną nazywamy program uruchamiany w całości za pomocą jednego pliku wykonywalnego. W aplikacjach webowych taka architektura ma postać modelu trójwarstwowego. Na te warstwy składają się:
+  Monolitem, bądź programem zaprojektowanym zgodnie z architekturą monolityczną nazywamy program uruchamiany w całości za pomocą jednego pliku wykonywalnego. W~aplikacjach webowych taka architektura ma postać modelu trójwarstwowego. Na te warstwy składają się:
   
   \begin{enumerate}
     \item interfejs użytkownika składający się z dokumentów HTML, arkuszy styli CSS oraz skryptów JS definiujących zachowanie interfejsu użytkownika,
@@ -54,31 +57,107 @@ main parts. The first one describes the most important aspects of the implementa
     \item warstwa dostępu do danych.
   \end{enumerate}
   
+  Taką strukturę trójwarstwową możemy opisać diagramem
+
+  % diagram trójwarstwówki
+
   Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o \textit{modelu dwuwarstwowym}.
   Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazywały się być zbyt rozwlekłe. 
-  Ponadto każda zmiana w oprogramowaniu powoduje konieczność zbudowania oraz wystawienia na środowisko produkcyjne kolejnej wersji oprogramowania, co przy dużych aplikacjach potrafi zabierać znaczącą ilość czasu. Utrudnia to też proces testowania oprogramowania, zarówno manualnie (ze względu na rosnącą ilość scenariuszy testowych) jak i automatycznie (ze względu na rosnący czas uruchomienia siatki testów).
+  Ponadto każda zmiana w~oprogramowaniu powoduje konieczność zbudowania oraz wystawienia na środowisko produkcyjne kolejnej wersji oprogramowania, co przy dużych aplikacjach potrafi zabierać znaczącą ilość czasu. Utrudnia to też proces testowania oprogramowania, zarówno manualnie (ze względu na rosnącą ilość scenariuszy testowych) jak i automatycznie (ze względu na rosnący czas uruchomienia siatki testów).
   Zgodnie z prawem Conwaya, takie trudności odbijają się na sposobie zarządzania organizacją, która jest producentem oprogramowania.
   Zgodnie z \cite{fowler} pojęcia \textit{monolit} w odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unixa określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać. 
 
   \section{Architektura mikroserwisów}
+
   Trudności z utrzymaniem oprogramowania, które w obrębie jednego projektu zawiera ciągle rozrastającą się logikę, spowodowały konieczność zastosowania podziału kodu na mniejsze i jednocześnie prostsze w utrzymaniu części. 
   Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem.
 
-  Komunikacja między mikroserwisami zachodzi przy użyciu protokołów siecowych neutralnych w ujęciu technologicznym takich jak HTTP.
-  
-  Podział aplikacji na serwisy pozwala na wykonywanie prac nad konkretnymi funkcjonalnościami aplikacji bez potencjalnego ryzyka naruszenia kodu odpowiedzialnego za inne funkcjonalności. Innymi zaletami tego rozwiązania są:
+  % diagram mikroserwisów z prezentacji
+
+  Komunikacja między mikroserwisami zachodzi przy użyciu protokołów siecowych neutralnych w ujęciu technologicznym takich jak HTTP. Podział aplikacji na serwisy pozwala na wykonywanie prac nad konkretnymi funkcjonalnościami aplikacji bez potencjalnego ryzyka naruszenia kodu odpowiedzialnego za inne funkcjonalności. Innymi zaletami tego rozwiązania są:
 
   \begin{enumerate}
     \item dowolność w zastosowaniu technologii - pozwala na użycie do każdej funkcjonalności zasobów technologicznych najlepiej odpowiadających danemu zadaniu,
     \item stabilność - ewentualne problemy z aplikacją nie powodują zatrzymania całego systemu a jedynie konkretnego serwisu,
-    \item skalowalność - nowe funkcjonalności można dodawać z nowymi serwisami, a poszczególne serwisy można rozszerzać nie naruszając logiki innych serwisów.
+    \item skalowalność - nowe funkcjonalności można dodawać poprzez dodanie nowych serwisów, a poszczególne serwisy można rozszerzać nie naruszając logiki innych serwisów.
+    \item wzrost dostępności usług - w razie, gdyby któryś z serwisów przestał działać, inne usługi nadal będą dostępne 
   \end{enumerate}
 
-  \section{Przełożenie mikroserwisów na interfejsy użytkownika}
+  Przedstawione zalety są znaczące nie tylko z punktu widzenia projektowania i tworzenia oprogramowania, ale też z punktu zarządzania projektami. Jasny podział projektu na niezależne od siebie części pozwala też na przyporządkowanie ludzi do zespołów mniejszych, ale ściśle skoncentrowanych na konkretnym wycinku wiedzy potrzebnym do realizacji danej funkcjonalności. 
+  Autonomiczność takich zespołów pozwala na zmniejszenie ilości potrzebnych kontaktów między zespołami w celu ustalenia rozwiązań problemów i dalszego przebiegu projektu. Pomaga to między innymi zmniejszyć ilość spotkań oraz skrócić te krytycznie potrzebne do realizacji projektu.
+  
+  Pomimo wielu zalet, architektura mikroserwisowa nie jest wolna od wad. Pierwszą z~nich są koszty infrastruktury potrzebnej do wdrożenia oprogramowania opartego na mikroserwisach. Aby spełnić postulat niezależności mikroserwisów od siebie, każdy oddzielny mikroserwis musi być postawiony na osobnym serwerze. W wyniku tego, zamiast zapłacić koszty utrzymania jednego serwera z lepszymi parametrami, zmuszeni jesteśmy zreplikować poniesione koszty na każdy z istniejących mikroserwisów. 
+  
+  Rozrośnięcie się infrastruktury przy użyciu mikroserwisów zwiększa też zapotrzebowanie na ludzi zajmujących się na wsparciu developerów w zakresie konfiguracji infrastruktury (tzw. \textit{inżynierowie DevOps}), a w przypadku zastosowania technologii chmurowych, również specjalistów w zakresie technologii chmurowych takich jak \textit{Microsoft Azure}, \textit{Google Cloud} oraz \textit{Amazon Web Services}. Taka sytuacja również przyczynia się do zwiększenia kosztów związanych z oprogramowaniem w architekturze mikroserwisowej. Można jednak uznać ją za czynnik zmuszający firmy do rozwoju w~zakresie R\&D w celu ustalenia własnych standardów architektonicznych, które będą optymalne dla ich potrzeb biznesowych w zakresie realizacji mikroserwisów. Mimo to, czynniki kosztowe powodują, że wybór architektury mikroserwisowej do projektu może nie być optymalny dla małych i średnich projektów.
+
+  Mikroserwisy powodują też konieczność uzgodnienia konwencji między projektami w~sprawach takich jak:
+
+  \begin{itemize}
+    \item postać wyjątków rzucanych przez serwisy,
+    \item opis obiektów, które są częścią innych serwisów,
+    \item sposób łączenia się między serwisami,
+    \item autoryzacja i uwierzytelnianie,
+    \item standard podziału kodu na projekty lub moduły.
+  \end{itemize}
+  Brak zgody między projektami w powyższych kwestiach może doprowadzić do nieporządku jeszcze większego, niż gdyby projekt był realizowany jako monolit. Ponadto, uporządkowana struktura projektu mikroserwisowego pozwala na replikowanie schematu na dowolną skalę, a co za tym idzie automatyzację procesu tworzenia nowych serwisów. Można to zrealizować na przykład za pomocą szablonów projektu aplikowanych do środowiska programistycznego, obrazów środowiska \textit{Docker} lub idąc jeszcze dalej - odpowiednio ustawionym klastrze \textit{Kubernetes}. Jednak przy sprostaniu tym wyzwaniom architektonicznym na etapie projektowania oprogramowania zyskamy dzięki mikroserwisom możliwość zarządzania projektem o dowolnej wielkości w sposób ściśle uporządkowany, jednocześnie zachowując dobrą jakość kodu źródłowego oraz łatwe dostosowanie projektu do potrzeb biznesowych i metodologii zwinnych zarządzania projektami.
 
 \chapter{Mikrofrontendy}
-  \section{Założenia teoretyczne}
+  \section{Wstęp}
+  Pomimo zastosowania mikroserwisów przy projektowaniu logiki backendowej części aplikacji, frontendowa część projektu pozostawała w przeszłości mniej rozbudowana. Głównym powodem był fakt, że logika obliczeniowa i biznesowa występowała po stronie backendu. Odciążało to część frontendową, co pozwalało na mniejsze jej rozbudowanie oraz ograniczenie rozwarstwienia frontendu w postaci monolitu. Jednak wraz z rozwojem technologicznym w zakresie webowych interfejsów użytkownika, objętość kodu frontendowego w widoczny sposób wzrosła. Na taki stan rzeczy, złożyło się wiele czynników takich jak:
+  
+  \begin{itemize}
+    \item powstawanie coraz bardziej kreatywnych i szczegółowych efektów wizualnych,
+    \item optymalizacja działania skryptów JavaScript,
+    \item zwiększająca się dojrzałość działalność programistów frontendu,
+    \item rozwój frameworków strukturyzujących projekty frontendowe takich jak \textit{Angular}, \textit{React}, \textit{Vue} (produkują one dziesiątki tysięcy linii kodu wynikowego).
+  \end{itemize}
+
+  Wszystkie te czynniki spowodowały potrzebę podzielenia kodu na pewnego rodzaju moduły. Z samym skutkiem w obrębie ilości i struktury kodu, najpopularniejsze frameworki radzą sobie wystarczająco dobrze, by używać tych rozwiązań w projektach komercyjnych. Najlepiej z tym problemem radzi sobie framework Angular, który proponuje programistom systemowy podział na moduły, oraz kilka propozycji na podziały niższego stopnia na struktury takie jak:
+  
+  \begin{itemize}
+    \item component,
+    \item service,
+    \item guard,
+    \item pipe
+    \item i inne, rzadziej używane.
+  \end{itemize}
+
+  Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
+  Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z diagramem (numer) można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
+  
+  % diagram mikrofrontendów
+  
+  Pojedynczą jednostkę funkcjonalną takiego podziału na frontendzie nazywamy \textit{mikrofrontendem}, a w ogólności architekturę używającą takiego podziału nazywamy architekturą mikrofrontendową.
+  Zgodnie z wynikami ankiety \cite{tsh_2022}, 24.6\% programistów biorących udział w ankiecie pracowało w 2021 roku w zespołach wykorzystujących w~projekcie architekturę mikrofrontendową. Ponadto, według tej ankiety, 37.2\% programistów biorących udział w ankiecie twierdzi, że w przeciągu dwóch następnych lat popularność koncepcji mikrofrontendów wzrośnie. Na podstawie tych statystyk można wnioskować, że pomysł rozszerzenia mikroserwisów na część frontendową przyjął się w~dużej części organizacji oraz przede wszystkim, w świadomości programistów.
+
+  \section{Dodatkowe ograniczenia względem mikroserwisów}
+
+
+    \subsection{Ograniczone zasoby obliczeniowe}
+    \subsection{Zasoby współdzielone}
+    \subsection{Arkusze styli CSS}
+    \subsection{Komunikacja z backendem}
+    \subsection{Komunikacja między mikrofrontendami}
   \section{Zmiany w architekturze względem mikroserwisów}
+  \section{Sposoby implementacji technicznej mikrofrontendów}
+  Społeczność programistów wypracowała kilka funkcjonalnych rozwiązań w zakresie implementacji mikrofrontendów. Procentowy odsetek popularności każdego z nich wśród programistów badanych w ankiecie \cite{tsh_2022}, możemy zaobserwować na wykresie \ref{fig:tsh_frontend_implementations}
+  
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=\textwidth]{frontend_implementations_by_percent.png}
+    \caption{Wykres procentowy popularności rozwiązań \\ dla implementacji mikrofrontendów w 2022 roku (źródło: \cite{tsh_2022})}
+    \label{fig:tsh_frontend_implementations}
+  \end{figure}
+
+  Dla każdego z nich istnieje zestaw zastosowań biznesowych dla których rozwiązanie nie będzie właściwe, ale będą istnieć też takie, dla których będą one właściwe. Każde z nich zostanie omówione dokładniej omówione w poniższych podsekcjach. 
+    \subsection{Elementy <iframe>}
+    \subsection{Web Components}
+    \subsection{Module Federation}
+    \subsection{single-spa}
+    \subsection{Bit}
+    \subsection{Konfiguracja serwera używająca routingu}
+    \subsection{Systemjs}
 
 \chapter{Funkcjonalność badanej aplikacji}
 Na potrzeby porównania obu architektur stworzona została aplikacja do zarządzania finansami osobistymi o roboczej nazwie Midas. W założeniu odbiorcami aplikacji mają być pojedyncze osoby lub gospodarstwa domowe, które chcą zadbać o kontrolę nad swoim budżetem domowym. Głównymi funkcjonalnościami aplikacji są:
@@ -111,7 +190,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
   \section{Szablony projektów}
   W celu zapewnienia skalowalności oraz łatwego tworzenia nowych serwisów, na potrzeby projektu opracowano dwa szablony projektu - zawierający wstępną autentykację użytkownika poprzez sprawdzanie zawartości nagłówka HTTP oraz taki, który jej nie zawiera.
 
-  Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia nowego rozwiązania Visual Studio zawierającego ustawienia dla testów jednostkowych i integracyjnych aplikacji, ustawienia plików Dockerfile i docker-compose.yml, oraz ściśle określonego rozłożenia projektów w rozwiązaniu. Zapewnia to spójność kodu w zakresie całej aplikacji. W przypadku, gdyby nad kodem pojedynczego serwisu pracowało kilku programistów, mają oni ściśle narzuconą przez szablon strukturę kodu i podstawowa jego struktura zostanie zachowana. To z kolei powoduje, że wynikowo mimo tego, że nad poszczególnymi serwisami pracują różne osoby, ich struktura jest w dużym stopniu podobna. Ma to wiele zalet w zakresie zarządzania projektami, przykładowo:
+  Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia nowego rozwiązania Visual Studio zawierającego ustawienia dla testów jednostkowych i integracyjnych aplikacji, ustawienia plików Dockerfile i \textit{docker-compose.yml}, oraz ściśle określonego rozłożenia projektów w rozwiązaniu. Zapewnia to spójność kodu w zakresie całej aplikacji. W przypadku, gdyby nad kodem pojedynczego serwisu pracowało kilku programistów, mają oni ściśle narzuconą przez szablon strukturę kodu i podstawowa jego struktura zostanie zachowana. To z kolei powoduje, że wynikowo mimo tego, że nad poszczególnymi serwisami pracują różne osoby, ich struktura jest w dużym stopniu podobna. Ma to wiele zalet w zakresie zarządzania projektami, przykładowo:
 
   \begin{itemize}
     \item pozwala na szybszą aklimatyzację programistów przenoszonych między projektami, bądź takich, których rola w zespole pomaga na wsparciu istniejących projektów,
@@ -156,7 +235,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
   \section{Zależności między modułami i projektami}
   \section{Możliwości w zakresie zarządzania projektami}
   \section{Skalowalność}
-  \section{Koszty ustawienia środowiska produckyjnego}
+  \section{Koszty ustawienia środowiska produkcyjnego}
 
 \chapter{Podsumowanie}
 
