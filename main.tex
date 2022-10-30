@@ -25,6 +25,9 @@
 \hyphenpenalty=10000
 \hbadness=10000
 
+\AtBeginEnvironment{figure}{\setlength{\intextsep}{1.6\baselineskip}}
+\counterwithout{figure}{chapter}
+
 \begin{document}
 \maketitle
 \statementpage
@@ -57,9 +60,15 @@
     \item warstwa dostępu do danych.
   \end{enumerate}
   
-  Taką strukturę trójwarstwową możemy opisać diagramem
+  Taką strukturę trójwarstwową możemy opisać diagramem \ref{fig:monolith_diagram}
 
-  % diagram trójwarstwówki
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.8\textwidth]{monolith_diagram.png}
+    \caption{Podział na warstwy dla przykładowego sklepu internetowego \\ w architekturze monolitycznej}
+    \label{fig:monolith_diagram}
+  \end{figure}
 
   Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o \textit{modelu dwuwarstwowym}.
   Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazywały się być zbyt rozwlekłe. 
@@ -70,17 +79,25 @@
   \section{Architektura mikroserwisów}
 
   Trudności z utrzymaniem oprogramowania, które w obrębie jednego projektu zawiera ciągle rozrastającą się logikę, spowodowały konieczność zastosowania podziału kodu na mniejsze i jednocześnie prostsze w utrzymaniu części. 
-  Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem.
+  Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem. Przykładowe rozmieszczenie modułów w projekcie mikroserwisowym możemy zaobserwować na diagramie \ref{fig:microservices_diagram}
 
-  % diagram mikroserwisów z prezentacji
+  % ogarnąć tekst tak, aby rysunek wyświetlał się w poprawnym miejscu
 
-  Komunikacja między mikroserwisami zachodzi przy użyciu protokołów siecowych neutralnych w ujęciu technologicznym takich jak HTTP. Podział aplikacji na serwisy pozwala na wykonywanie prac nad konkretnymi funkcjonalnościami aplikacji bez potencjalnego ryzyka naruszenia kodu odpowiedzialnego za inne funkcjonalności. Innymi zaletami tego rozwiązania są:
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.8\textwidth]{microservices_diagram.png}
+    \caption{Podział na moduły dla przykładowego sklepu internetowego \\ w architekturze mikroserwisowej}
+    \label{fig:microservices_diagram}
+  \end{figure}
+
+  Komunikacja między mikroserwisami zachodzi przy użyciu protokołów sieciowych neutralnych w ujęciu technologicznym takich jak HTTP. Podział aplikacji na serwisy pozwala na wykonywanie prac nad konkretnymi funkcjonalnościami aplikacji bez potencjalnego ryzyka naruszenia kodu odpowiedzialnego za inne funkcjonalności. Innymi zaletami tego rozwiązania są:
 
   \begin{enumerate}
     \item dowolność w zastosowaniu technologii - pozwala na użycie do każdej funkcjonalności zasobów technologicznych najlepiej odpowiadających danemu zadaniu,
     \item stabilność - ewentualne problemy z aplikacją nie powodują zatrzymania całego systemu a jedynie konkretnego serwisu,
-    \item skalowalność - nowe funkcjonalności można dodawać poprzez dodanie nowych serwisów, a poszczególne serwisy można rozszerzać nie naruszając logiki innych serwisów.
-    \item wzrost dostępności usług - w razie, gdyby któryś z serwisów przestał działać, inne usługi nadal będą dostępne 
+    \item skalowalność - nowe funkcjonalności można dodawać poprzez dodanie nowych serwisów, a poszczególne serwisy można rozszerzać nie naruszając logiki innych serwisów,
+    \item wzrost dostępności usług - w razie, gdyby któryś z serwisów przestał działać, inne usługi nadal będą dostępne.
   \end{enumerate}
 
   Przedstawione zalety są znaczące nie tylko z punktu widzenia projektowania i tworzenia oprogramowania, ale też z punktu zarządzania projektami. Jasny podział projektu na niezależne od siebie części pozwala też na przyporządkowanie ludzi do zespołów mniejszych, ale ściśle skoncentrowanych na konkretnym wycinku wiedzy potrzebnym do realizacji danej funkcjonalności. 
@@ -125,17 +142,31 @@
   Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
   Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z diagramem (numer) można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
   
-  % diagram mikrofrontendów
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.8\textwidth]{microfrontends_diagram.png}
+    \caption{Podział na moduły dla przykładowego sklepu internetowego \\ w architekturze mikrofrontendowej}
+    \label{fig:microfrontends_diagram}
+  \end{figure}
   
   Pojedynczą jednostkę funkcjonalną takiego podziału na frontendzie nazywamy \textit{mikrofrontendem}, a w ogólności architekturę używającą takiego podziału nazywamy architekturą mikrofrontendową.
   Zgodnie z wynikami ankiety \cite{tsh_2022}, 24.6\% programistów biorących udział w ankiecie pracowało w 2021 roku w zespołach wykorzystujących w~projekcie architekturę mikrofrontendową. Ponadto, według tej ankiety, 37.2\% programistów biorących udział w ankiecie twierdzi, że w przeciągu dwóch następnych lat popularność koncepcji mikrofrontendów wzrośnie. Na podstawie tych statystyk można wnioskować, że pomysł rozszerzenia mikroserwisów na część frontendową przyjął się w~dużej części organizacji oraz przede wszystkim, w świadomości programistów.
 
   \section{Dodatkowe ograniczenia względem mikroserwisów}
-
-
     \subsection{Ograniczone zasoby obliczeniowe}
     \subsection{Zasoby współdzielone}
     \subsection{Arkusze styli CSS}
+    Arkusze styli z poszczególnych mikrofrontendów są ładowane razem do przeglądarki, na której uruchomiony jest każdy z pożądanych mikrofrontendów. Występuje w takiej sytuacji ryzyko replikacji tych samych styli CSS oraz nadpisywania się styli CSS między mikrofrontendami. Drugi z przypadków jest szczególnie kłopotliwy, gdyż wygląd niektórych elementów na stronie może zależeć wyłącznie od tego, który z mikrofrontendów załaduje się do przeglądarki jako pierwszy. Jest na to kilka rozwiązań:
+
+    \begin{itemize}
+      \item stosowanie ogólnej konwencji nazewniczej dla klas CSS, takich jak BEM i OOCSS
+      \item wstrzykiwanie styli CSS bezpośrednio przez kod JavaScript (tzw. CSS-in-JS)
+      \item zastosowanie Shadow DOM
+    \end{itemize}
+
+    Każde z tych podejść wciąż wymaga dyskusji między programistami pracującymi nad projektem oraz ich ostrożności i uważności na aspekt nadpisywania się bądź replikacji styli CSS.
+
     \subsection{Komunikacja z backendem}
     \subsection{Komunikacja między mikrofrontendami}
   \section{Zmiany w architekturze względem mikroserwisów}
