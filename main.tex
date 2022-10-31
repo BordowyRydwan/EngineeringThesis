@@ -18,6 +18,10 @@
 
 \usepackage{hyperref}
 \usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
+\usepackage{indentfirst}
+\usepackage{listings,chngcntr}
+\usepackage{es6listings}
+\usepackage{weblistings}
 \addbibresource{refs.bib}
 
 \tolerance=1
@@ -25,10 +29,11 @@
 \hyphenpenalty=10000
 \hbadness=10000
 
-\AtBeginEnvironment{figure}{\setlength{\intextsep}{1.6\baselineskip}}
-\counterwithout{figure}{chapter}
+\AtBeginEnvironment{figure,lstlisting}{\setlength{\intextsep}{1.6\baselineskip}}
 
 \begin{document}
+\counterwithout{figure}{chapter}
+\counterwithout{lstlisting}{chapter}
 \maketitle
 \statementpage
 \abstractpage
@@ -140,7 +145,7 @@
   \end{itemize}
 
   Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
-  Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z diagramem (numer) można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
+  Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z diagramem \ref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
   
   \begin{figure}[h]
     \centering
@@ -155,7 +160,17 @@
 
   \section{Dodatkowe ograniczenia względem mikroserwisów}
     \subsection{Ograniczone zasoby obliczeniowe}
+    W przypadku prac nad backendowymi częściami projektu, coraz mniej zwraca się uwagę na optymalizację działania algorytmów używanych w oprogramowaniu. Pamięć operacyjna oraz masowa stały się dużo tańsze niż kilka lat temu. Dla klienta stało się tańsze zainwestowanie maksymalnie kilku tysięcy złotych na dołożenie pamięci do serwera udostępniającego żądaną usługę sieciową niż zainwestowanie wielokrotności tej kwoty w czas pracy programistów, którzy zoptymalizują wadliwy algorytmicznie kod.
+    Nie ma to jednak zastosowania przy pracy nad frontendem. Przeglądarka, w której koniec końców efekty pracy są pokazane użytkownikowi końcowemu, oferuje jedynie swoje zasoby pamięci - nie można użyć tak dużego odsetka zasobów komputera, jak w przypadku backendu. Poza tym, minimalne odstępstwa od optymalizacji są zauważalne dla użytkownika końcowego. Każde przycięcie się elementów interfejsu, brak płynności powodują irytację użytkownika, a co dalej za tym idzie, spadek zadowolenia z używania wyprodukowanego oprogramowania. W przypadku zastosowania mikrofrontendów problem narasta. De facto ładujemy do przeglądarki jednocześnie kilka pełnoprawnych aplikacji i wymagamy od nich, aby one wszystkie podzieliły się niewielkimi zasobami pamięci i procesora zaalokowanymi przez przeglądarkę w taki sposób, aby każda z nich działała w sposób komfortowy dla użytkownika. Na szczęście rozwiązanie problemu jest konceptualnie bardzo proste. Wystarczy ładować do przeglądarki tylko te mikrofrontendy, które w danym momencie są użytkownikowi krytycznie potrzebne. Najczęściej stosowanym sposobem implementacji takiego rozwiązania jest ładowanie konkretnych mikrofrontendów po zmianie adresu URL w przeglądarce. Gotowe rozwiązania implementujące mikrofrontendy, takie jak \textit{Single SPA} optymalizują ładowanie zasobów jeszcze bardziej poprzez zastosowanie wzorca \textit{Lazy loading}. Dzięki tej prostej sztuczce, można ściśle kontrolować ładowanie się mikrofrontendów do przeglądarki.
+
     \subsection{Zasoby współdzielone}
+    W przypadku, gdy na potrzeby jednego z mikrofrontendów tworzony jest reużywalny komponent (przykładowo tabela o odpowiednim wyglądzie i zachowaniu), może zaistnieć potrzeba zastosowania takiego komponentu w innym mikrofrontendzie. Wtedy pierwszym z pomysłów, jakie mogą powstać, jest przekopiowanie kodu z jednego do drugiego mikrofrontendu. Jednak to rozwiązanie tworzy nowe problemy. 
+    
+    Po pierwsze, każda zmiana w komponencie, w celu uzgodnienia wersji wymaga zmian w tym samym komponencie we wszystkich mikrofrontendach używających tego projektu. W przypadku kilku mikrofrontendów jest to możliwe, ale w przypadku, gdy mamy takich mikrofrontendów setki lub tysiące, takie cykliczne zmiany są wręcz niemożliwe do wykonania i zabierałyby one duży odsetek czasu całościowo poświęconego na projekt.
+    Rozwiązaniem problemu okazuje się być umieszczeniu tego kodu jeden raz w zewnętrznym repozytorium (technicznie mogą to być prywatne repozytoria NPM lub inne rozwiązanie) i~zainstalowanie przez użycie systemu zarządzania pakietami. We frontendowych częściach projektu najczęściej są to NPM i Yarn.
+    
+    Po drugie, komponent skopiowany wprost z jednego mikrofrontendu na drugi, powoduje konieczność powstawania oddzielnych scenariuszy testowych na ten sam komponent dla każdego mikrofrontendu. W praktyce, już przy kilkunastu mikrofrontendach taka ilość testów staje się nie do utrzymania w takim stanie, aby scenariusze odpowiadały aktualnemu stanowi funkcjonalności.
+
     \subsection{Arkusze styli CSS}
     Arkusze styli z poszczególnych mikrofrontendów są ładowane razem do przeglądarki, na której uruchomiony jest każdy z pożądanych mikrofrontendów. Występuje w takiej sytuacji ryzyko replikacji tych samych styli CSS oraz nadpisywania się styli CSS między mikrofrontendami. Drugi z przypadków jest szczególnie kłopotliwy, gdyż wygląd niektórych elementów na stronie może zależeć wyłącznie od tego, który z mikrofrontendów załaduje się do przeglądarki jako pierwszy. Jest na to kilka rozwiązań:
 
@@ -165,10 +180,14 @@
       \item zastosowanie Shadow DOM
     \end{itemize}
 
-    Każde z tych podejść wciąż wymaga dyskusji między programistami pracującymi nad projektem oraz ich ostrożności i uważności na aspekt nadpisywania się bądź replikacji styli CSS.
+    Każde z tych podejść wciąż wymaga dyskusji między programistami pracującymi nad projektem oraz ich ostrożności i uważności na aspekt nadpisywania się bądź replikacji styli CSS. Dlatego też, mimo opisanych ścieżek rozwiązania, najważniejsze stają się zdrowy rozsądek osób decydujących o przebiegu projektu oraz doświadczenie zespołu pracującego nad projektem.
 
     \subsection{Komunikacja z backendem}
+
+
     \subsection{Komunikacja między mikrofrontendami}
+    W projektach zdarzają się sytuacje, gdy istnieje potrzeba ukazania na widoku frontendu informacji z kilku wycinków domenowych projektu. Dla sytuacji z diagramu \ref{fig:microfrontends_diagram} zaistniałoby to wtedy, gdyby do listy recenzji należało dodać informację ile recenzujący użytkownik kupił sztuk produktu za jaką kwotę. Określając to modułami z tego przykładu - do modułu mikrofrontendu realizującego recenzje produktów należałoby dodać komunikację z mikrofrontendem obsługującym płatności. Rekomendowanym  zachowaniem w tej sytuacji jest nie stosować komunikacji między aplikacjami na frontendzie. Odrobinę lepszym wyjściem jest zastosować taką komunikację po stronie backendu i na warstwie API aplikacji stworzyć endpoint, który podaje do frontendu potrzebne informacje. Martin Fowler w swoim artykule \cite{fowler_2019} wspomina, że możliwe jest tutaj zastosowanie wzorca architektonicznego BFF (\textit{Backends For Frontends}). Jednak przy wystąpieniu takiej sytuacji wciąż należy się zastanowić, czy zastosowany sposób podziału projektu na serwisy jest wystarczająco dobry, aby spełnić potrzeby biznesowe w architektonicznie poprawny sposób.
+
   \section{Zmiany w architekturze względem mikroserwisów}
   \section{Sposoby implementacji technicznej mikrofrontendów}
   Społeczność programistów wypracowała kilka funkcjonalnych rozwiązań w zakresie implementacji mikrofrontendów. Procentowy odsetek popularności każdego z nich wśród programistów badanych w ankiecie \cite{tsh_2022}, możemy zaobserwować na wykresie \ref{fig:tsh_frontend_implementations}
@@ -182,10 +201,18 @@
   \end{figure}
 
   Dla każdego z nich istnieje zestaw zastosowań biznesowych dla których rozwiązanie nie będzie właściwe, ale będą istnieć też takie, dla których będą one właściwe. Każde z nich zostanie omówione dokładniej omówione w poniższych podsekcjach. 
-    \subsection{Elementy <iframe>}
-    \subsection{Web Components}
+    \subsection{Elementy \lstinline{<iframe>}}
+    Najprostszym rozwiązaniem, obecnym już od dawna w standardzie języka znaczników HTML, jest element \lstinline{<iframe>}. Zgodnie z teorią, takie rozwiązanie spełnia założenia mikrofrontendów. W wygodny sposób izolują poszczególne mikrofrontendy od siebie, nie pozwalają na nadpisanie się selektorów CSS oraz ewentualnych zmiennych globalnych w skrpytach JavaScript. Dzieje się tak ze względu na to, że elementy \lstinline{<iframe>}posiadają swój osobny zakres dla styli CSS i kodu JavaScript. Mimo to mają one też kilka wad. Po pierwsze, pełna izolacja kontekstu w elemencie \lstinline{<iframe>} powoduje, że treść tego elementu strony nie będzie reagowała na zmiany w routingu. Ponadto, operowanie na historii przeglądania, adresie URL jest znacznie utrudnione. Taki koncept sprawia też trudności w przypadku, gdy znaczenie ma responsywność strony.
+
+    \subsection{Przechowywanie mikrofrontendów w skryptach JavaScript}
+    Idea ładowania mikrofrontendów przez podpinanie skryptów JavaScript jest bardzo prosta. Zgodnie z przykładem implementacji podanym na listingu \ref{lst:js_microfrontends}, na początku sekcji \lstinline{<body>} podpiete są trzy skrypty reprezentujące trzy mikrofrontendy. Obecny jest także element \lstinline{<div id="micro-frontend-root">}, do którego będą ładowane mikrofrontendy. W skrypcie podanym niżej znajduje się przyporządkowanie tras w routingu do mikrofrontendów o odpowiednich nazwach oraz referencja na element \lstinline{<div id="micro-frontend-root">}
+
+    \lstinputlisting[style=htmlcssjs, label=lst:js_microfrontends, caption=Przykładowa implementacja mikrofrontendu (przykład pochodzi z \cite{fowler_2019})]{listings/microfrontends.html}
+
     \subsection{Module Federation}
-    \subsection{single-spa}
+    \subsection{Single SPA}
+    Single SPA jest frameworkiem
+
     \subsection{Bit}
     \subsection{Konfiguracja serwera używająca routingu}
     \subsection{Systemjs}
@@ -204,7 +231,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Opis backendu projektu}
   \section{Dobór technologii do projektu}
-  Do zrealizowania tej części projektu został wykorzystany język C\# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (Long Term Support). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
+  Do zrealizowania tej części projektu został wykorzystany język C\# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (\textit{Long Term Support}). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
   
   \begin{itemize}
     \item użycie paradygmatu programowania obiektowego i będący jego częścią polimorfizm, który sprzyja replikacji pojedynczego wzorca mikroserwisu,
@@ -249,7 +276,7 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Opis badanych frontendów}
   \section{Dobór technologii do projektów}
-  Do realizacji mikrofrontendów użyto biblioteki \textit{single-spa}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyto frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
+  Do realizacji mikrofrontendów użyto biblioteki \textit{Single SPA}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyto frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
 
   Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisów wygenerowanych przez generator NSwag. Będzie to działało tak jak w przypadku klas w~języku C\# generowanych na potrzeby komunikacji między serwisami backendowymi. Różnica będzie tu jedynie taka, że te klasy będą gotowymi klasami w języku TypeScript dostosowanymi do użycia we frameworku Angular.
 
