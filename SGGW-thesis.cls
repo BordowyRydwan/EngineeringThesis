@@ -72,6 +72,9 @@
 \ProcessOptions*\relax
 \LoadClass[12pt,notitlepage,twoside]{report}
 
+\RequirePackage{hyperref}
+\RequirePackage{indentfirst}
+\RequirePackage{listings,chngcntr}
 \RequirePackage{graphicx}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{mathptmx} %czcionka Times New Roman
@@ -85,9 +88,18 @@
 \RequirePackage{polski}
 \selecthyphenation{polish}
 
+\renewcommand{\listoffigures}{\begingroup
+  \tocchapter
+  \tocfile{\listfigurename}{lof}}
+
+\renewcommand{\lstlistoflistings}{\begingroup
+  \tocsection
+  \tocchapter
+  \tocfile{\lstlistlistingname}{lol}
+\endgroup}
+
 \RequirePackage{titlesec} % zmiana formatu chapter do (1 Nazwa)
-\titleformat{\chapter}
-  {\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
+\titleformat{\chapter}{\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
 \RequirePackage{enumitem} %zmiana odleglosci w listach - generalne zmniejszenie
@@ -111,6 +123,39 @@
 \newcommand{\VeryVeryLarge}[1]{\@setfontsize\VeryVeryLarge{24pt}{28}{#1}} %definicja czcionki 24pt
 
 \newcommand{\version}{1.061}
+
+% ustawienia listingów
+
+\usepackage{./stylings/es6listings}
+\usepackage{./stylings/weblistings}
+\renewcommand{\lstlistlistingname}{Spis listingów}
+\renewcommand{\lstlistingname}{Kod}
+
+\RequirePackage{cleveref}
+\crefformat{figure}{#2\textbf{Rys.~#1}#3}
+\crefformat{listing}{#2\textbf{Kod~#1}#3}
+
+% ustawienia rysunków
+
+\RequirePackage[titles]{tocloft}
+\renewcommand{\figurename}{Rys.}
+\renewcommand{\cftfigpresnum}{Rys. }
+\renewcommand{\cftfigaftersnum}{}
+\newlength{\mylen}
+\settowidth{\mylen}{\cftfigpresnum\cftfigaftersnum}
+\addtolength{\cftfignumwidth}{\mylen}
+
+% ustawienia BibTeX (automatyczna bibliografia)
+
+\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
+\addbibresource{refs.bib}
+
+% ustawienie preferencji, żeby LaTeX nie przerywał linii myślnikami
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
 
 %definicje zmiennych
 \def\@album{}
