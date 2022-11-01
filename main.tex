@@ -16,12 +16,32 @@
 \promotor{dr \ inż.\ Piotra Wrzeciono}
 \pworkplace{Instytut Informatyki Technicznej\\Katedra Systemów Informacyjnych}
 
+\renewcommand{\listoffigures}{\begingroup
+\tocsection
+\tocfile{\listfigurename}{lof}
+\endgroup}
+
 \usepackage{hyperref}
-\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
 \usepackage{indentfirst}
+
 \usepackage{listings,chngcntr}
-\usepackage{es6listings}
-\usepackage{weblistings}
+\usepackage{./stylings/es6listings}
+\usepackage{./stylings/weblistings}
+\renewcommand{\lstlistlistingname}{Spis listingów}
+\renewcommand{\figurename}{Rys.}
+
+\usepackage[titles]{tocloft}
+\renewcommand{\cftfigpresnum}{Rys. } % put before the number
+\renewcommand{\cftfigaftersnum}{}  % put after the number
+\newlength{\mylen}
+\settowidth{\mylen}{\cftfigpresnum\cftfigaftersnum}
+\addtolength{\cftfignumwidth}{\mylen}
+
+\usepackage{etoolbox}
+\tracingpatches
+\patchcmd{\listoffigures}{\chapter*}{\chapter}{}{}
+
+\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
 \addbibresource{refs.bib}
 
 \tolerance=1
@@ -45,12 +65,11 @@
 {distributed architecture, microservices, microfrontends, software architecture}
 
 
-{
-  % Spis treści może być złożony z pojedynczą interlinią, np. jeśli jedna linia wychodzi na następną stronę.
-  % W przeciwnym razie spis treści wstawić bez powyższego rozkazu i klamry.
-  \doublespacing
-  \tableofcontents
-}
+
+% Spis treści może być złożony z pojedynczą interlinią, np. jeśli jedna linia wychodzi na następną stronę.
+% W przeciwnym razie spis treści wstawić bez powyższego rozkazu i klamry.
+\doublespacing
+\tableofcontents
 
 \startchapterfromoddpage % niezależnie od długości spisu treści pierwszy rozdział zacznie się na nieparzystej stronie
 
@@ -65,7 +84,7 @@
     \item warstwa dostępu do danych.
   \end{enumerate}
   
-  Taką strukturę trójwarstwową możemy opisać diagramem \ref{fig:monolith_diagram}
+  Taką strukturę trójwarstwową możemy opisać rysunkiem \ref{fig:monolith_diagram}
 
   \begin{figure}[h]
     \centering
@@ -84,7 +103,7 @@
   \section{Architektura mikroserwisów}
 
   Trudności z utrzymaniem oprogramowania, które w obrębie jednego projektu zawiera ciągle rozrastającą się logikę, spowodowały konieczność zastosowania podziału kodu na mniejsze i jednocześnie prostsze w utrzymaniu części. 
-  Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem. Przykładowe rozmieszczenie modułów w projekcie mikroserwisowym możemy zaobserwować na diagramie \ref{fig:microservices_diagram}
+  Zaczęto więc do większych aplikacji stosować podział aplikacji na części będące usługami niezależnymi od pozostałych elementów systemu. Taką pojedynczą usługę nazywamy mikroserwisem. Przykładowe rozmieszczenie modułów w projekcie mikroserwisowym możemy zaobserwować na rysunku \ref{fig:microservices_diagram}
 
   % ogarnąć tekst tak, aby rysunek wyświetlał się w poprawnym miejscu
 
@@ -145,7 +164,7 @@
   \end{itemize}
 
   Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
-  Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z diagramem \ref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
+  Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z rysunkiem \ref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów wśród innych specjalistów w zespole tak, aby wynikowe podzespoły były już w pełni skoncentrowane wobec wydzielonej partii wartości biznesowej według potrzeb biznesu. 
   
   \begin{figure}[h]
     \centering
@@ -182,13 +201,9 @@
 
     Każde z tych podejść wciąż wymaga dyskusji między programistami pracującymi nad projektem oraz ich ostrożności i uważności na aspekt nadpisywania się bądź replikacji styli CSS. Dlatego też, mimo opisanych ścieżek rozwiązania, najważniejsze stają się zdrowy rozsądek osób decydujących o przebiegu projektu oraz doświadczenie zespołu pracującego nad projektem.
 
-    \subsection{Komunikacja z backendem}
-
-
     \subsection{Komunikacja między mikrofrontendami}
-    W projektach zdarzają się sytuacje, gdy istnieje potrzeba ukazania na widoku frontendu informacji z kilku wycinków domenowych projektu. Dla sytuacji z diagramu \ref{fig:microfrontends_diagram} zaistniałoby to wtedy, gdyby do listy recenzji należało dodać informację ile recenzujący użytkownik kupił sztuk produktu za jaką kwotę. Określając to modułami z tego przykładu - do modułu mikrofrontendu realizującego recenzje produktów należałoby dodać komunikację z mikrofrontendem obsługującym płatności. Rekomendowanym  zachowaniem w tej sytuacji jest nie stosować komunikacji między aplikacjami na frontendzie. Odrobinę lepszym wyjściem jest zastosować taką komunikację po stronie backendu i na warstwie API aplikacji stworzyć endpoint, który podaje do frontendu potrzebne informacje. Martin Fowler w swoim artykule \cite{fowler_2019} wspomina, że możliwe jest tutaj zastosowanie wzorca architektonicznego BFF (\textit{Backends For Frontends}). Jednak przy wystąpieniu takiej sytuacji wciąż należy się zastanowić, czy zastosowany sposób podziału projektu na serwisy jest wystarczająco dobry, aby spełnić potrzeby biznesowe w architektonicznie poprawny sposób.
+    W projektach zdarzają się sytuacje, gdy istnieje potrzeba ukazania na widoku frontendu informacji z kilku wycinków domenowych projektu. Dla sytuacji z rysunku \ref{fig:microfrontends_diagram} zaistniałoby to wtedy, gdyby do listy recenzji należało dodać informację ile recenzujący użytkownik kupił sztuk produktu za jaką kwotę. Określając to modułami z tego przykładu - do modułu mikrofrontendu realizującego recenzje produktów należałoby dodać komunikację z mikrofrontendem obsługującym płatności. Rekomendowanym  zachowaniem w tej sytuacji jest nie stosować komunikacji między aplikacjami na frontendzie. Odrobinę lepszym wyjściem jest zastosować taką komunikację po stronie backendu i na warstwie API aplikacji stworzyć endpoint, który podaje do frontendu potrzebne informacje. Martin Fowler w swoim artykule \cite{fowler_2019} wspomina, że możliwe jest tutaj zastosowanie wzorca architektonicznego BFF (\textit{Backends For Frontends}). Jednak przy wystąpieniu takiej sytuacji wciąż należy się zastanowić, czy zastosowany sposób podziału projektu na serwisy jest wystarczająco dobry, aby spełnić potrzeby biznesowe w architektonicznie poprawny sposób.
 
-  \section{Zmiany w architekturze względem mikroserwisów}
   \section{Sposoby implementacji technicznej mikrofrontendów}
   Społeczność programistów wypracowała kilka funkcjonalnych rozwiązań w zakresie implementacji mikrofrontendów. Procentowy odsetek popularności każdego z nich wśród programistów badanych w ankiecie \cite{tsh_2022}, możemy zaobserwować na wykresie \ref{fig:tsh_frontend_implementations}
   
@@ -201,22 +216,36 @@
   \end{figure}
 
   Dla każdego z nich istnieje zestaw zastosowań biznesowych dla których rozwiązanie nie będzie właściwe, ale będą istnieć też takie, dla których będą one właściwe. Każde z nich zostanie omówione dokładniej omówione w poniższych podsekcjach. 
-    \subsection{Elementy \lstinline{<iframe>}}
+
+    \subsection{Konfiguracja serwera używająca routingu}
+    Konfigurowanie projektu, aby podawał do przeglądarki kod konkretnego mikrofrontendu w zależności od adresu URL można w prosty sposób wykonać poprzez odpowiednią konfigurację serwera. Taki sposób konfiguracji mkrofrontendów zalicza się do rozwiązań integrujących mikrofrontendy w czasie budowania projektu. To rozwiązanie jest wspierane przez najpopularniejsze oprogramowanie serwerowe takie jak IIS, Apache, NGINX. Konfiguracja serwera działa w bardzo prosty sposób - mapuje adresy URL na nazwy plików istniejących na serwerze oraz w zależności od tego jaki aktualnie jest adres URL, przypisuje do zmiennej odpowiedni plik HTML. Odnosząc się do przykładu na listingu \ref{lst:nginx_microfrontends}, taką zmienną jest \lstinline{$PAGE} z linii nr 8.
+
+    \lstinputlisting[style=htmlcssjs, label=lst:nginx_microfrontends, caption=Przykładowa implementacja mikrofrontendu (przykład pochodzi z \cite{fowler_2019})]{listings/nginx_microfrontends.html}
+
+    \subsection{Elementy <iframe>}
     Najprostszym rozwiązaniem, obecnym już od dawna w standardzie języka znaczników HTML, jest element \lstinline{<iframe>}. Zgodnie z teorią, takie rozwiązanie spełnia założenia mikrofrontendów. W wygodny sposób izolują poszczególne mikrofrontendy od siebie, nie pozwalają na nadpisanie się selektorów CSS oraz ewentualnych zmiennych globalnych w skrpytach JavaScript. Dzieje się tak ze względu na to, że elementy \lstinline{<iframe>}posiadają swój osobny zakres dla styli CSS i kodu JavaScript. Mimo to mają one też kilka wad. Po pierwsze, pełna izolacja kontekstu w elemencie \lstinline{<iframe>} powoduje, że treść tego elementu strony nie będzie reagowała na zmiany w routingu. Ponadto, operowanie na historii przeglądania, adresie URL jest znacznie utrudnione. Taki koncept sprawia też trudności w przypadku, gdy znaczenie ma responsywność strony.
+
+    \lstinputlisting[style=htmlcssjs, label=lst:iframe_microfrontends, caption=Przykładowa implementacja mikrofrontendu za pomocą \lstinline{<iframe>} (przykład pochodzi z \cite{fowler_2019})]{listings/iframe_microfrontends.html}
 
     \subsection{Przechowywanie mikrofrontendów w skryptach JavaScript}
     Idea ładowania mikrofrontendów przez podpinanie skryptów JavaScript jest bardzo prosta. Zgodnie z przykładem implementacji podanym na listingu \ref{lst:js_microfrontends}, na początku sekcji \lstinline{<body>} podpiete są trzy skrypty reprezentujące trzy mikrofrontendy. Obecny jest także element \lstinline{<div id="micro-frontend-root">}, do którego będą ładowane mikrofrontendy. W skrypcie podanym niżej znajduje się przyporządkowanie tras w routingu do mikrofrontendów o odpowiednich nazwach oraz referencja na element \lstinline{<div id="micro-frontend-root">}
 
-    \lstinputlisting[style=htmlcssjs, label=lst:js_microfrontends, caption=Przykładowa implementacja mikrofrontendu (przykład pochodzi z \cite{fowler_2019})]{listings/microfrontends.html}
+    \lstinputlisting[style=htmlcssjs, label=lst:js_microfrontends, caption=Przykładowa implementacja mikrofrontendu za pomocą skrpytów JavaScript (przykład pochodzi z \cite{fowler_2019})]{listings/microfrontends.html}
 
-    \subsection{Module Federation}
+    \subsection{Dynamiczne ładowanie modułów poprzez menedżer pakietów}
+    Istnieje również grupa rozwiązań oparta na dynamicznym ładowaniu modułów. Do grupy rozwiązań tego typu należą wspomniane na wykresie procentowym z rysunku \ref{fig:tsh_frontend_implementations} Module Federation, Bit oraz Systemjs. Pierwsze z rozwiązań, Module Federation, jest wtyczką do transpilatora Webpack. Wszystkie trzy, pomimo pewnych niewielkich różnic w zakresie składni poleceń, instalacji i procesu konfiguracji, działają one bardzo podobnie. 
+
     \subsection{Single SPA}
-    Single SPA jest frameworkiem
+    Single SPA jest frameworkiem, za pomocą którego można zrealizować koncepcję mikrofrontendów. Ten framework czerpie swój sposób działania z rozwiązań opartych na dynamicznym ładowaniu modułów. Istnieje też więc możliwość używania Single SPA z każdym popularnym frameworkiem stosowanym przez programistów frontendu. Innowacją, którą proponuje Single SPA są predefiniowane konfiguracje, które automatyzują tworzenie mikrofrontedów. Do celów automatyzacji ustawiania infrastruktury mikrofrontendów twórcy udostępniają narzędzie CLI o nazwie \textit{create-single-spa}. Single SPA narzuca też sam z siebie określony podział konkrentych mikrofrontendów ze względu na zastosowania. Składnikami tego podziału są:
 
-    \subsection{Bit}
-    \subsection{Konfiguracja serwera używająca routingu}
-    \subsection{Systemjs}
+    \begin{itemize}
+      \item \textit{root-config} - mikrofrontend mający zastosowanie głównie przy agregacji innych mikrofrontendów,
+      \item \textit{application} - domyślny typ mikrofrontendu bez specjalnych zadań projektowych,
+      \item \textit{parcel} - reużywalny komponent, który jest niezależny w konstrukcji od frameworków używanych w projekcie; w przypadku użycia tylko jednego frameworka w całym projekcie, twórcy rekomendują \cite{singlespa-parcels} poleganie na systemie komponentyzacji tego frameworka.
+    \end{itemize}
 
+    Oprócz wymienionych możliwości, framework Single SPA udostępnia swój interfejs do testów jednostkowych i testów E2E oraz wspiera renderowanie stron za pomocą serwera. Dokumentacja frameworka Single SPA zawiera bardzo dokładne instrukcje postawienia środowiska oraz wdrożenia produkcyjnego pod każdy z popularnych frameworków, co znacząco obniża próg wejścia w samą koncepcję mikrofrontendów.
+    
 \chapter{Funkcjonalność badanej aplikacji}
 Na potrzeby porównania obu architektur stworzona została aplikacja do zarządzania finansami osobistymi o roboczej nazwie Midas. W założeniu odbiorcami aplikacji mają być pojedyncze osoby lub gospodarstwa domowe, które chcą zadbać o kontrolę nad swoim budżetem domowym. Głównymi funkcjonalnościami aplikacji są:
 
@@ -297,8 +326,9 @@ Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co za
 
 \chapter{Podsumowanie}
 
-\nocite{*}
 \printbibliography[heading=bibnumbered,title={Bibliografia}]
+\listoffigures
+\lstlistoflistings
 
 \beforelastpage
 
