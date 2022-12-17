@@ -302,18 +302,46 @@ Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisó
 
 Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań nad mikrofrontendami, użyto gotowej biblioteki z elementami wizualnymi o nazwie \textit{angular-material}.
 
-\section{Wersja monolityczna}
-\section{Wersja mikroserwisowa}
+  \section{Wersja monolityczna}
+  \section{Wersja mikrofrontendowa}
+  Logika frontendu aplikacji została podzielona na następujące mikrofrontendy:
+
+  \begin{itemize}
+    \item kontener (Container Microfrontend) - jest mikrofrontendem, do którego są ładowane wszystkie inne mikrofrontendy; jego zadaniem jest rozmieszczenie mikrofrontendów na stronie internetowej oraz kontrola ich ładowania poprzez reagowanie na zmiany w routingu
+    \item nawigacja (Navigation Microfrontend) - jest odpowiedzialny za ubranie możliwości przełączania się pomiędzy mikrofrontendami w sposób przyjazny dla użytkownika
+    \item hosting plików (File Storage Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią hostingu plików wspomnianą w rozdziale 4.3.1
+    \item autoryzacja (Authorization Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią autoryzacji wspomnianą w rozdziale 4.3.2.
+    \item zarządzanie użytkownikami (User Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania użytkownikami wspomnianą w rozdziale 4.3.3.
+    \item zarządzanie rodzinami (Family Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania rodzinami wspomnianą w rozdziale 4.3.4.
+    \item logika domenowa (Transaction Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania transakcjami wspomnianą w rozdziale 4.3.5.
+  \end{itemize}
+
+
 
 \chapter{Porównanie projektów frontendowych}
-\section{Wersjonowanie kodu}
-\section{Wydajność}
-\section{Dostępność}
-\section{Testowanie kodu}
-\section{Zależności między modułami i projektami}
-\section{Możliwości w zakresie zarządzania projektami}
-\section{Skalowalność}
-\section{Koszty ustawienia środowiska produkcyjnego}
+  \section{Wersjonowanie kodu}
+  \section{Wydajność}
+  \section{Dostępność}
+  \section{Testowanie kodu}
+  Pomiędzy obiema wersjami projektu nie zaobserowano różnic w zakresie uruchamiania oraz tworzenia testów automatycznych. Głównym powodem takiego wyniku może być fakt, że we frameworku Angular, testy jednostkowe i integracyjne są wykonywane w odniesieniu do komponentu. Nie ma znaczenia to, w jakim środowisku został umieszczony komponent - można więc też wnioskować, że zmiana architektury projektu z monolitycznej na mikroserwisową nie wpływa na takie czynniki testowania takie jak:
+  
+  \begin{itemize}
+    \item czas uruchomienia siatki testów automatycznych
+    \item poziom ich skomplikowania
+    \item ilość zależności potrzebnych do poprawnego odwzorowania logiki komponentu
+  \end{itemize}
+
+  % TODO: uruchomić dwie siatki testów tego samego komponentu i wykazać, że to to samo
+
+  Zgadza się to z wnioskami Micheala Geersa \cite{geers_2020}, jak i Martina Fowlera \cite{fowler_2019} w zakresie testów automatycznych na warstwie frontendu aplikacji.
+  
+  % TODO: podmienić stack trace na polski odpowiednik
+  Jednakże, istnieją różnice w zakresie testowania manualnego obu wersji aplikacji. W przypadku, gdy wystąpi błąd przy komunikacji z backendowym odpowiednikiem mikrofrontendu, będzie się różnił zakres kodu, w którym został popełniony błąd - na korzyść architektury mikrofrontendowej. W aplikacji mikrofrontendowej, analizując stack trace można się przede wszystkim dowiedzieć, z jakiego adresu ()
+
+  \section{Zależności między modułami i projektami}
+  \section{Możliwości w zakresie zarządzania projektami}
+  \section{Skalowalność}
+  \section{Koszty ustawienia środowiska produkcyjnego}
 
 \chapter{Podsumowanie}
 
