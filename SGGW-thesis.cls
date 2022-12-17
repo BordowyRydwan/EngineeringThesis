@@ -104,7 +104,7 @@
 
 \RequirePackage{enumitem} %zmiana odleglosci w listach - generalne zmniejszenie
 % Jesli efekt nie jest wlasciwy, to trzeba stosowac opcje pakietu "enumitem" w konkretnych listach.
-\setlist[itemize]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=2pt}
+\setlist[itemize]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=6pt}
 \setlist[description]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=2pt}
 \setlist[enumerate]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=2pt}
 
@@ -132,8 +132,8 @@
 \renewcommand{\lstlistingname}{Kod}
 
 \RequirePackage{cleveref}
-\crefformat{figure}{#2\textbf{Rys.~#1}#3}
-\crefformat{listing}{#2\textbf{Kod~#1}#3}
+\crefformat{figure}{#2\textbf{Rys.~#1.}#3}
+\crefformat{listing}{#2\textbf{Kod~#1.}#3}
 
 % ustawienia rysunków
 
