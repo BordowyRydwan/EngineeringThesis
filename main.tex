@@ -19,8 +19,17 @@
 \raggedbottom
 
 \begin{document}
+\counterwithout{table}{chapter}
 \counterwithout{figure}{chapter}
 \counterwithout{lstlisting}{chapter}
+\def\inline{\lstinline[basicstyle=\ttfamily,keywordstyle={}]}
+\lstset{
+    language=C,
+    basicstyle=\ttfamily,
+    keywordstyle=\lst@ifdisplaystyle\color{blue}\fi,
+    commentstyle=\color{gray}
+}
+\makeatother
 
 \maketitle
 \statementpage
@@ -100,8 +109,6 @@ Komunikacja między mikroserwisami zachodzi przy użyciu protokołów sieciowych
 Przedstawione zalety są znaczące nie tylko z punktu widzenia projektowania i tworzenia oprogramowania, ale też z punktu zarządzania projektami. Jasny podział projektu na niezależne od siebie części pozwala też na przyporządkowanie ludzi do zespołów mniejszych, ale ściśle skoncentrowanych na konkretnym wycinku wiedzy potrzebnym do realizacji danej funkcjonalności.
 Autonomiczność takich zespołów pozwala na zmniejszenie ilości potrzebnych kontaktów między zespołami w celu ustalenia rozwiązań problemów i dalszego przebiegu projektu. Pomaga to między innymi zmniejszyć ilość spotkań oraz skrócić te krytycznie potrzebne do realizacji projektu.
 
-Pomimo wielu zalet, architektura mikroserwisowa nie jest wolna od wad. Pierwszą z~nich są koszty infrastruktury potrzebnej do wdrożenia oprogramowania opartego na mikroserwisach. Aby spełnić postulat niezależności mikroserwisów od siebie, każdy oddzielny mikroserwis musi być postawiony na osobnym serwerze. W wyniku tego, zamiast zapłacić koszty utrzymania jednego serwera z lepszymi parametrami, zmuszeni jesteśmy zreplikować poniesione koszty na każdy z istniejących mikroserwisów.
-
 Rozrośnięcie się infrastruktury przy użyciu mikroserwisów zwiększa też zapotrzebowanie na ludzi zajmujących się wsparciem developerów w zakresie konfiguracji infrastruktury (tzw. \textit{inżynierowie DevOps}), a w przypadku zastosowania technologii chmurowych, również specjalistów w zakresie technologii takich jak \textit{Microsoft Azure}, \textit{Google Cloud} oraz \textit{Amazon Web Services}. Taka sytuacja również przyczynia się do zwiększenia kosztów związanych z oprogramowaniem w architekturze mikroserwisowej. Można jednak uznać ją za czynnik zmuszający firmy do rozwoju w~zakresie R\&D (\textit{Research and Development}) w celu ustalenia własnych standardów architektonicznych, które będą optymalne dla ich potrzeb biznesowych w zakresie realizacji mikroserwisów. Mimo to, czynniki kosztowe powodują, że wybór architektury mikroserwisowej do projektu może nie być optymalny dla małych i średnich projektów.
 
 Mikroserwisy powodują też konieczność uzgodnienia konwencji między projektami w~sprawach takich jak:
@@ -133,7 +140,7 @@ Wszystkie te czynniki spowodowały potrzebę podzielenia kodu na pewnego rodzaju
 	\item service,
 	\item guard,
 	\item pipe
-	\item i inne, rzadziej używane.
+	\item i inne.
 \end{itemize}
 
 Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
@@ -185,6 +192,7 @@ Kolejnym sposobem jest skorzystanie z zasobów, które już są wspólne dla wsz
   \item używanie ciasteczek
   \item przechowywanie danych w sesji użytkownika
   \item wykorzystanie oferowanego przez przeglądarkę \textit{Local Storage}
+  \item przekazywanie danych przez adres URL strony
 \end{itemize}
 
 Możliwe jest również wykorzystanie narzędzi do zarządzania stanem oferowanych przez najpopularniejsze frameworki frontendowe. Takimi narzędzami są:
@@ -280,7 +288,7 @@ Najważniejszą cechą tych szablonów jest możliwość szybkiego ustawienia no
 Logika backendowa aplikacji została podzielona według funkcjonalności na serwisy opisane w poniższych podsekcjach.
 
 \subsection{Hosting plików - File Storage Service}
-Serwis z hostingiem plików odpowiada za przechowywanie wszystkich plików przekazanych aplikacji przez użytkownika. Są to między innymi zdjęcia profilowe użytkowników oraz pliki z dowodami wykonania transakcji przypisanych do konkretnych transakcji w ramach logiki domenowej. Serwis hostingu plików pozwala też na pobranie samego pliku o znanym identyfikatorze UUID oraz pobranie informacji o umieszczeniu pliku oraz konkretnych pobrań pliku.
+Serwis z hostingiem plików odpowiada za przechowywanie wszystkich plików przekazanych aplikacji przez użytkownika. Są to między innymi zdjęcia profilowe użytkowników oraz pliki z dowodami wykonania transakcji przypisanych do konkretnych transakcji w ramach logiki domenowej. Serwis hostingu plików pozwala też na pobranie samego pliku o znanym identyfikatorze GUID oraz pobranie informacji o umieszczeniu pliku oraz konkretnych pobrań pliku.
 
 \subsection{Autoryzacja - Authorization Service}
 Serwis odpowiada za autoryzację użytkowników oraz operacje związane z~użytkownikami, które wymagają zachowania ostrożności pod kątem bezpieczeństwa aplikacji - tworzenie konta, logowanie do konta w aplikacji Midas, zmiana hasła. W tym serwisie przy logowaniu powstaje token JWT, który zapisany w ciasteczkach krąży po innych serwisach przekazywany przez nagłówek \textit{Authorization} w zapytaniu HTTP.
@@ -303,27 +311,175 @@ Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisó
 Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań nad mikrofrontendami, użyto gotowej biblioteki z elementami wizualnymi o nazwie \textit{angular-material}.
 
   \section{Wersja monolityczna}
+
+
   \section{Wersja mikrofrontendowa}
   Logika frontendu aplikacji została podzielona na następujące mikrofrontendy:
 
   \begin{itemize}
-    \item kontener (Container Microfrontend) - jest mikrofrontendem, do którego są ładowane wszystkie inne mikrofrontendy; jego zadaniem jest rozmieszczenie mikrofrontendów na stronie internetowej oraz kontrola ich ładowania poprzez reagowanie na zmiany w routingu
+    \item kontener (Container Microfrontend) - jest mikrofrontendem, do którego są ładowane wszystkie inne mikrofrontendy; jego zadaniem jest rozmieszczenie mikrofrontendów na stronie internetowej oraz kontrola ich ładowania poprzez reagowanie na zmiany w~routingu
     \item nawigacja (Navigation Microfrontend) - jest odpowiedzialny za ubranie możliwości przełączania się pomiędzy mikrofrontendami w sposób przyjazny dla użytkownika
     \item hosting plików (File Storage Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią hostingu plików wspomnianą w rozdziale 4.3.1
-    \item autoryzacja (Authorization Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią autoryzacji wspomnianą w rozdziale 4.3.2.
-    \item zarządzanie użytkownikami (User Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania użytkownikami wspomnianą w rozdziale 4.3.3.
-    \item zarządzanie rodzinami (Family Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania rodzinami wspomnianą w rozdziale 4.3.4.
-    \item logika domenowa (Transaction Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania transakcjami wspomnianą w rozdziale 4.3.5.
+    \item autoryzacja (Authorization Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią autoryzacji wspomnianą w~rozdziale 4.3.2.
+    \item zarządzanie użytkownikami (User Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania użytkownikami wspomnianą w~rozdziale 4.3.3.
+    \item zarządzanie rodzinami (Family Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania rodzinami wspomnianą w~rozdziale 4.3.4.
+    \item logika domenowa (Transaction Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią zarządzania transakcjami wspomnianą w~rozdziale 4.3.5.
   \end{itemize}
 
+  \subsection{Realizacja komunikacji między mikrofrontendami}
+  W trakcie realizacji mikrofrontendowej wersji aplikacji wystąpiły dwie sytuacje, w~których nie było innego wyjścia niż zastosować komunikację bezpośrednio między mikrofrontendami.
+  Pierwszą z nich jest fakt, że narzędzie Swagger błędnie serializalizuje obiekty odzwierciedlające pliki, gdy robi więcej niż jeden raz. Dlatego więc zamieszczanie plików było możliwe tylko bezpośrednio przez \textit{File Storage Service}, a to z kolei według założeń mikrofrontendów jest możliwe wyłącznie przez odpowiadający mu mikrofrontend - \textit{File Storage Microfrontend}. W tej sytuacji wystapiła potrzeba pobrania informacji dla \textit{Transaction Microfrontend} bezpośrednio z \textit{File Storage Microfrontend}. Dzięki temu zabiegowi można umieścić plik w hostingu plików za pomocą \textit{File Storage Microfrontend} i~przesłanie identyfikatora GUID pliku do \textit{Transaction Microfrontend}.
 
+  Do tego celu zastosowano komunikację poprzez nasłuchiwanie zdarzeń. Wybór tej metody nastąpił ze względu na to, że komunikacja między tymi dwoma mikrofrontendami następowała tylko i wyłącznie we wspomnianej sytuacji. Generowanie paczki przez menedżer pakietów oraz użycie narzędzi do zarządzania stanem były zbyt skomplikowanymi rozwiązaniami na tak prosty przypadek. Zastosowanie \textit{Local Storage} lub ciasteczek powodowały w tym wypadku koniecnzość dodatkowych metod w komponentach służących do reagowania na zmiany w tych magazynach danych. Wybór padł więc na posłużenie się zdarzeniami w tym celu. Do implementacji tej funkcjonalności użyto trzech zdarzeń:
+
+  \begin{itemize}
+    \item \textit{file-upload} - do przekazania identyfikatora GUID pliku między serwisami
+    \item \textit{reveal-upload} - do pokazania użytkownikowi elementów interfejsu realizujących przekazanie pliku
+    \item \textit{hide-upload} - do schowania przed użytkownikiem elementów interfejsu realizujących przekazanie pliku
+  \end{itemize}
+
+  Implementacja tej funkcjonalności w kodzie została przedstawiona na listingach \cref{lst:mf_communication_files} i \cref{lst:mf_communication_transactions}
+
+  \lstinputlisting[style=es6, label=lst:mf_communication_files, caption=Implementacja komunikacji między mikrofrontendami po stronie \textit{Transaction Microfrontend}]{listings/mf_communiaction_file.ts}
+
+  \lstinputlisting[style=es6, label=lst:mf_communication_transactions, caption=Implementacja komunikacji między mikrofrontendami po stronie \textit{File Storage Microfrontend}]{listings/mf_communiaction_transactions.ts}
+
+  Metody \lstinline{ngOnInit} oraz \lstinline{ngOnDestroy} są elementami interfejsu \lstinline{OnInit}, który jest częścią frameworka Angular. Pierwsza z nich jest wywoływania zaraz po inicjalizacji komponentu, a druga przy jego usuwaniu. Są one odpowiednimi miejscami do tworzenia i~usuwania zdarzeń w zależności od warunków zdefiniowanych w kodzie pokazującym i~chowającym komponent. Komunikację między serwisami udało się zrealizować w~niespełna 40 linii kodu wliczając w to odpowiednie formatowanie, klamry oraz znaki nowej linii między metodami. Jest to odpowiednio proste rozwiązanie do tak prostego problemu. Co więcej, rozwiązanie jest łatwo skalowalne. Przy implementowaniu nowego komponentu wykorzystujące te zdarzenia wystarczy zdefiniować nowe metody w klasie komponentu, które będą się wywoływać przy nasłuchiwaniu zdarzenia.
+
+  Drugą ze wspomnianych sytuacji jest pobieranie pliku z \textit{File Storage Service}. Implementacja przekazywania pliku przez backend do innego mikrofrontendu niż \textit{File Storage Microfrontend} byłaby nieoptymalna. Po pierwsze, przekazywanie pliku przez kilka serwisów zwiększa czas realizacji żądania HTTP. Po drugie takie rozwiązanie jest mało skalowalne - lepiej jest umożliwić potencjalne pobranie pliku z każdego dostępnego mikrofrontendu. W tej sytuacji można zastosować przekazywanie danych przez adres URL. Jedyną daną potrzebną do pobrania pliku jest identyfikator GUID pliku, a adres URL można ustawić w przeglądarce domyślnie za pomocą każdego mikrofrontendu z każdego komponentu. Poza tym, do realizacji pobierania pliku nie jest potrzebny żaden interfejs graficzny, a jedynie metoda pobierająca identyfikator z adresu URL i metoda pobierająca dane z \textit{File Storage Service}. Implemetacja funkcjonalności została przedstawiona na listingu \cref{lst:mf_downloading_file}
+
+  \lstinputlisting[style=es6, label=lst:mf_downloading_file, caption=Komponent realizujący pobieranie pliku przy użyciu danych z adresu URL , extendedchars=true,literate={±}{{$\pm$}}1 {§}{{\S}}1]{listings/mf_downloading_file.ts}
+
+  W linii 13, pobierany jest parametr z adresu URL, który w module realizującym routing aplikacji nazwano \textit{guid}. Ten parametr jest następnie sprawdzany za pomocą metody \lstinline{checkIfGuidIsValid}, która sprawdza czy parametr został poprawnie podany do komponentu. Następnie pobierany jest plik z odpowedniego serwisu za pomocą metody \lstinline{sendDownloadRequest}, a potem ten plik jest pobierany z komponentu na dysk użytkownika za pośrednictwem przeglądarki w metodzie \lstinline{downloadFile}.
 
 \chapter{Porównanie projektów frontendowych}
-  \section{Wersjonowanie kodu}
-  \section{Wydajność}
+  W celu zapewnienia jak największej zgodności między oboma projektami, tam gdzie jest to możliwe, logika komponentów w obu projektach jest dokładnie taka sama. W innych przypadkach, dokonano możliwie jak najprostszych korekt, aby oba projekty się skompilowały. Ponad to, w pliku \textit{angular.json} w każdym z mikrofrontendów dopisano do konfiguracji Webpacka opcję \lstinline{"excludeAngularDependencies": true}, co pozwoliło na to, żeby nie importować zależności frameworka Angular za każdym zbudowaniem aplikacji. Zamiast tego, te pliki są ładowane z repozytoriów CDN, do których dane zapisano w \textit{Container Microfrontend} w folderze \textit{import\_maps} .
+
+  \section{Metryki kodu}
+    \subsection{Ilość kodu}
+    W celu sprawdzenia ilości kodu napisanego w obu projektach użyto paczki \textit{cloc} dostępnej w systemie Linux. Za jej pomocą można policzyć ile linii tekstu zawiera plik lub folder oraz przyporządkowuje je do jednej z trzech kategorii.
+
+    \begin{itemize}
+      \item \textit{blank} - pusta linia
+      \item \textit{comment} - komentarz
+      \item \textit{code} - linia kodu
+    \end{itemize}
+
+    Za pomocą tego narzędzia sprawdzono foldery \textit{src} wszystkich frontendów w obu projektach. Inne foldery zostały wyłączone ze sprawdzenia, gdyż zawierają one metadane projektów, pliki menadżera pakietów lub też dane generowanie automatyczne. One wszystkie nie są narzutem kodu bezpośrednio wygenerowanym przez programistę - wzięcie ich pod uwagę mogłoby wypaczyć wyniki pod względem wpływu kodu na powstanie projektu. Wyniki sprawdzenia zostały pokazane w \cref{table:cloc}
+
+    \begin{table}[h]
+      \centering
+      \caption{Wyniki sprawdzenia ilości kodu za pomocą \textit{cloc}}
+      \begin{tabular}{|l||r|r|r|r|r|}
+      \hline
+      \textbf{Mikrofrontend} & \multicolumn{1}{l|}{\textbf{Pliki}} & \multicolumn{1}{l|}{\textbf{Puste linie}} & \multicolumn{1}{l|}{\textbf{Komentarze}} & \multicolumn{1}{l|}{\textbf{Linie kodu}} & \multicolumn{1}{l|}{\textbf{Suma linii}} \\ \hline
+      \textit{Authorization} & 41 & 196 & 98 & 1124 & 1459 \\ \hline
+      \textit{Users} & 41 & 236 & 132 & 1511 & 1920 \\ \hline
+      \textit{Transactions} & 47 & 375 & 216 & 2369 & 3007 \\ \hline
+      \textit{File Storage} & 34 & 201 & 162 & 1234 & 1631 \\ \hline
+      \textit{Family} & 40 & 279 & 144 & 1731 & 2194 \\ \hline
+      \textit{Navigation} & 29 & 87 & 70 & 438 & 624 \\ \hline
+      \textit{Container} & 4 & 17 & 24 & 121 & 166 \\ \hline
+      \textbf{SUMA}& 236 & 1391 & 846 & 8528 & \textbf{11001} \\ \hline\hline
+      \textit{Monolityczny frontend} & 113 & 1053 & 407 & 7023 & \textbf{8596} \\ \hline
+      \end{tabular}
+      \label{table:cloc}
+    \end{table}
+
+    Wyniki pokazują, że w porównaniu do frontendu monolitycznego, identyczne funkcjonalności zajmują ponad dwa razy więcej plików w projekcie mikrofrontendowym. Ponadto projekt mikrofrontendowy zawiera 21,43\% linii więcej samego kodu, a~w~ogólności 27,98\% więcej linii tekstu.
+  
+    \subsection{Paczki z plikami wynikowymi}
+    Aplikacje zbudowano za pomocą komendy \lstinline{ng build} w aplikacjach z frameworkiem Angular oraz komendy \lstinline{webpack --mode=production} dla aplikacji kontenera. Czasy budowania aplikacji oraz rozmiary paczek przedstawia \cref{table:build_times}.
+
+    
+
+    \begin{table}[h]
+      \centering
+      \caption{Czasy budowania aplikacji oraz rozmiary paczek wynikowych}
+      \begin{tabular}{|l||r|r|}
+      \hline
+      \textbf{Mikrofrontend} & \multicolumn{1}{l|}{\textbf{Czas {[}s{]}}} & \multicolumn{1}{l|}{\textbf{Rozmiar paczki {[}kB{]}}} \\ \hline
+      \textit{Authorization} & 12,53 & 341,00 \\ \hline
+      \textit{Users} & 13,13 & 367,98 \\ \hline
+      \textit{Transactions} & 14,41 & 486,23 \\ \hline
+      \textit{FileStorage} & 11,68 & 193,40 \\ \hline
+      \textit{Family} & 13,09 & 369,46 \\ \hline
+      \textit{Navigation} & 9,68 & 139,85 \\ \hline
+      \textit{Container} & 2,47 & 20,40 \\ \hline
+       \textbf{SUMA} & \textbf{76,99} & \textbf{1918,32} \\ \hline\hline
+       \textit{Monolityczny frontend} & \textbf{27,12} & \textbf{938,07} \\ \hline
+      \end{tabular}
+      \label{table:build_times}
+    \end{table}
+
+    Niestety \lstinline{angular-cli}, które jest częścią frameworka Angular, nie posiada narzędzi, które pozwalałyby budować kilka aplikacji na raz. Jednocześnie komenda budująca paczkę wynikową jest zależna od ścieżki w której użytkownik się znajduje. Utrudnia to znacząco stworzenie skryptu automatyzującego, który wykonywałby komendy jednocześnie. Można więc przyjąć, że w przeciętnym projekcie informatycznym programista w najbardziej pesymistycznej sytuacji potencjalnie wykonuje te komendy jedna po drugiej, bądź używa skryptu, który nie zapewnia wykonywania się kilku komend jednocześnie. Jednak w~przeciętnych warunkach taka sytuacja nie nastąpi - budowanie dwóch aplikacji w~założeniach mają wykonywać dwa odrębne zespoły. Taki pojedynczy zespół, w~najgorszym wypadku (dla \textit{Transactions Microfrontend}) budowałby swoją część aplikacji o połowę szybciej niż cały frontend monolityczny.
+
+    Wyniki z \cref{table:build_times} pokazują, że łączny czas budowania całego projektu jest prawie 3 razy większy dla projektu mikrofrontendowego niż dla projektu z monolitycznym frontendem. Rozmiar paczki wynikowej w projekcie mikrofrontendowym jest 2 razy większy niż dla projektu monolitycznego. Należy zaznaczyć, że nie wynika z tego jeszcze, że przeglądarka użytkownika będzie musiała jednorazowo pobrać więcej danych, aby aplikacja poprawnie działała.
+
+    \subsection{Czas ładowania aplikacji}
+
+
+  \section{Rozkład architektoniczny projektu}
+  Schematy projektów obu aplikacji znajdują się na poniższych rysunkach. Na \cref{fig:monolith_fe_diagram}, zielone prostokąty odzwierciedlają mikrofrontendy realizujące konkretne funkcjonalności, natomiast kontener oznaczono kolorem szarym. Na \cref{fig:microservices_fe_diagram}, cały frontend monolityczny jest oznaczony kolorem szarym.
+
+  \begin{figure}[h!]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=\textwidth]{microfrontend-app-architecture.png}
+    \caption{Schemat projektu aplikacji z mikrofrontendami z podziałem na moduły}
+    \label{fig:monolith_fe_diagram}
+  \end{figure}
+
+  \pagebreak
+
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=\textwidth]{microservices-app-diagram.png}
+    \caption{Schemat projektu aplikacji monolitycznej bez podziału na moduły}
+    \label{fig:microservices_fe_diagram}
+  \end{figure}
+
+  W mikrofrontendowej wersji można wyodrębnić pięć osobnych aplikacji, nad którymi równolegle może pracować pięć osobnych zespołów. Jedynym zastrzeżeniem jest to, że 
+  zespół pracujący nad \textit{File Storage Microfrontend} musiałby ukończyć swoje prace wcześniej niż zespół pracujący nad \textit{Transactions Microfrontend}.
+
+  W wersji monolitycznej natomiast każdy podział aplikacji jest wciąż zamknięty technicznie w obrębie jednej aplikacji. W tak małej skali, jaką ma projekt, na którym oparte jest to porównanie, można przykładowo podzielić aplikację na moduły. W omawianym projekcie monolitycznym moduły zostały umieszczone w folderze \lstinline{/src/app/modules}. Schemat tego podziału został umieszczony na \cref{fig:monolith_fe_modules_diagram}.
+
+  \begin{figure}[h]
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=\textwidth]{mfe-modules.png}
+    \caption{Schemat projektu aplikacji monolitycznej z podziałem na moduły}
+    \label{fig:monolith_fe_modules_diagram}
+  \end{figure}
+
+  Taki podział działa w niewielkiej skali. Jednak w przypadku, gdyby projekt miał 100 lub 1000 mikrofrontendów, czas budowania aplikacji wzrósłby do ogromnych wartości, a~oddzielne mikrofrontendowe aplikacje będą się budować dalej w czasie odpowiednim tylko dla ich zakresu domenowego. Dlatego więc podział na moduły jest w ogólności wyłącznie półśrodkiem.
+
+  Dyskusja odnośnie podziału aplikacji ma duże znaczenie w kontekście skalowania aplikacji. Dodanie kolejnej warstwy do projektu aplikacji oznacza jedynie konieczność dodania referencji wyłącznie w jednej aplikacji. W przypadku projektu mikrofrontendowego oznacza to konieczność dodania referencji w każdym mikrofrontendzie, który miałby komunikować się z tą kolejną warstwą. Dlatego więc aplikacja monolityczna będzie się lepiej skalować wertykalnie.
+
+  W przypadku skalowania horyzontalnego, odrobinę korzystniej wypada architektura mikrofrontendowa. Ilość referencji do dodania w warstwie, w której dochodzi do skalowania jest taka sama dla obu projektów. Programiści implementujący nowe funkcjonalności są jednak wciąż zależni od bazy kodu, którą zastali. Jednak w przypadku mikrofrontendów, zgodnie z ich założeniami, dodawanie nowych mikrofrontendów odbywa się niezależnie od reszty kodu aplikacji. Sprzyja to zdecydowanie skalowaniu horyzontalnego aplikacji.
+
+  \section{Infrastruktura i koszty}
+  Infrastruktura potrzebna do uruchomienia pojedynczej aplikacji frontendowej nie jest skomplikowana. Istnieje wybór spośród wielu serwerów WWW, przykładowo:
+
+  \begin{itemize}
+    \item Apache
+    \item Node.js
+    \item Nginx
+    \item IIS
+  \end{itemize}
+
+  Do każdego z tych serwerów, w Internecie istnieje wielu usługodawców oferujących usługi hostingu WWW. Rynek usług hostingu WWW rozwinął się na tyle, że udostępnienie witryny w internecie stało się bardzo proste.
+
+  Sytuacja w przypadku mikrofrontendów daje większe pole do popisu specjalistom od infrastruktury sieciowej. Omawiany projekt mikrofrontendowy składa się już nie z jednej aplikacji, a z siedmiu osobnych aplikacji. W tak małej skali w jakiej jest przykładowy projekt, dałoby się skorzystać z tych samych rozwiązań, co dla frontendu monolitycznego. Wiele usługodawców \cite{ovh, az} oferuje swoim klientom nielimitowaną ilość stron WWW w~ramach jednej oferty. Dzięki temu, koszty wystawienia projektu mikrofrontendowego do Internetu są podobne, jak dla projektu monolitycznego. Dla obu omawianych projektów minimalny poniesiony koszt jest taki sam.
+  
+  Jednak przy dużej ilości mikrofrontendów, zarządzanie wieloma stronami wystawionymi do hostingu WWW może stać się kłopotliwe. W takiej sytuacji lepiej sprawdzają się inne rozwiązania, które pomagają w zarządzaniu wieloma aplikacjami jednocześnie. Przykładami takich rozwiązań mogą być \textit{Amazon Elastic Kubernetes Services (EKS)} i \textit{Azure Kubernetes Services (AKS)}. Oba rozwiązania wykorzystują narzędzie Kubernetes \cite{kubernetes} służące do automatyzacji i skalowania rozwiązań kontenerowych.
+
+  Oba omawiane przykładowe projekty mikrofrontendowe posiadają wykonane konfiguracje do narzędzia Docker, które pozwalają na konteneryzację środowiska oraz uruchomienie w nim kodu aplikacji oraz budowania obrazów, które mogą być później wykorzystane przez Kubernetes. Na potrzeby lokalnego uruchomienia aplikacji został stworzony skrypt uruchamiający konfiguracje \textit{docker-compose} dla każdego serwisu i~mikrofrontendu w aplikacji. W razie potrzeby udostępnienia tego w Internecie istnieje możliwość szybkiego zmigrowania aplikacji do klastrów Kubernetes oferowanych przez dostępnych dostawców usług chmurowych.
+
   \section{Dostępność}
   \section{Testowanie kodu}
-  Pomiędzy obiema wersjami projektu nie zaobserowano różnic w zakresie uruchamiania oraz tworzenia testów automatycznych. Głównym powodem takiego wyniku może być fakt, że we frameworku Angular, testy jednostkowe i integracyjne są wykonywane w odniesieniu do komponentu. Nie ma znaczenia to, w jakim środowisku został umieszczony komponent - można więc też wnioskować, że zmiana architektury projektu z monolitycznej na mikroserwisową nie wpływa na takie czynniki testowania takie jak:
+  Pomiędzy obiema wersjami projektu nie zaobserowano różnic w zakresie uruchamiania oraz tworzenia testów automatycznych. Głównym powodem takiego wyniku może być fakt, że we frameworku Angular, testy jednostkowe są wykonywane w odniesieniu do komponentu. Nie ma znaczenia to, w jakim środowisku został umieszczony komponent - można więc też wnioskować, że zmiana architektury projektu z monolitycznej na mikroserwisową nie wpływa na takie czynniki testowania takie jak:
   
   \begin{itemize}
     \item czas uruchomienia siatki testów automatycznych
@@ -331,17 +487,20 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
     \item ilość zależności potrzebnych do poprawnego odwzorowania logiki komponentu
   \end{itemize}
 
-  % TODO: uruchomić dwie siatki testów tego samego komponentu i wykazać, że to to samo
-
   Zgadza się to z wnioskami Micheala Geersa \cite{geers_2020}, jak i Martina Fowlera \cite{fowler_2019} w zakresie testów automatycznych na warstwie frontendu aplikacji.
-  
-  % TODO: podmienić stack trace na polski odpowiednik
-  Jednakże, istnieją różnice w zakresie testowania manualnego obu wersji aplikacji. W przypadku, gdy wystąpi błąd przy komunikacji z backendowym odpowiednikiem mikrofrontendu, będzie się różnił zakres kodu, w którym został popełniony błąd - na korzyść architektury mikrofrontendowej. W aplikacji mikrofrontendowej, analizując stack trace można się przede wszystkim dowiedzieć, z jakiego adresu ()
+
+  Jednakże, istnieją różnice w zakresie testowania manualnego obu wersji aplikacji. W przypadku, gdy wystąpi błąd przy komunikacji z backendowym odpowiednikiem mikrofrontendu, będzie się różnił zakres kodu, w którym został popełniony błąd - na korzyść architektury mikrofrontendowej. W aplikacji mikrofrontendowej, analizując zrzut stosu aplikacji można się przede wszystkim dowiedzieć, z mikrofrontendu pochodzi dany błąd, co zawęża zakres poszukiwań.
 
   \section{Zależności między modułami i projektami}
+  Do każdego mikrofrontendu użyto kilku zewnętrznych bibliotek, z czego duża z nich pokrywała się w większości mikrofrontedów. Przykładami takich często używanych zależności są pliki bibliotek: \textit{single-spa}, \textit{Angular}, \textit{Angular Material}. Taka sytuacja powoduje, że użytkownik jest zmuszany do pobierania tych samych bibliotek więcej niż jeden raz. To powoduje, że do przeglądarki jest pobierane więcej danych niż jest to potrzebne. Część z tych problemów przy realizacji mikrofrontendowej wersji projektu udało się rozwiązać poprzez zadeklarowanie przy budowaniu aplikacji, żeby nie dodawać do paczki ze zbudowaną aplikacją tych bibliotek. Takie pliki będą pobierane raz przy pierwszym odwiedzeniu witryny z aplikacją. Odnośniki do takich bibliotek zostały zebrane w plikach typu JSON w folderze \textit{import\_maps} aplikacji \textit{Container Microfrontend}. Listing \cref{lst:import_map} zawiera plik z odnośnikami do bibliotek, który posłużył do manualnych testów aplikacji.
+
+  \lstinputlisting[style=es6, label=lst:import_map, caption=Obiekt zawierający odnośniki do bibliotek z zewnętrznych źródeł]{listings/import_map.json}
+
+  Części zależności nie udało się wyłączyć z paczki wynikowej aplikacji. Mimo to, udało się uniknąć tego problemu dla największych i najbardziej istotnych bibliotek.
+
+  \pagebreak
+
   \section{Możliwości w zakresie zarządzania projektami}
-  \section{Skalowalność}
-  \section{Koszty ustawienia środowiska produkcyjnego}
 
 \chapter{Podsumowanie}
 

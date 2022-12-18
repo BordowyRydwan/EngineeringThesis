@@ -1,0 +1,28 @@
+{
+  "imports": {
+    "@midas/root-config": "//localhost:4000/midas-root-config.js",
+    "@midas/files": "//localhost:4001/main.js",
+    "@midas/auth": "//localhost:4002/main.js",
+    "@midas/transactions": "//localhost:4003/main.js",
+    "@midas/users": "//localhost:4004/main.js",
+    "@midas/family": "//localhost:4005/main.js",
+    "@midas/navigation": "//localhost:4006/main.js",
+
+    "single-spa": "https://cdnjs.cloudflare.com/ajax/libs/single-spa/5.9.3/system/single-spa.dev.js",
+    "rxjs": "https://cdn.jsdelivr.net/npm/@esm-bundle/rxjs/system/es2015/rxjs.min.js",
+    "rxjs/operators": "https://cdn.jsdelivr.net/npm/@esm-bundle/rxjs/system/es2015/rxjs-operators.min.js",
+    "@angular/compiler": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__compiler/system/es2020/ivy/angular-compiler.js",
+    "@angular/core": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__core/system/es2020/ivy/angular-core.js",
+    "@angular/common": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__common/system/es2020/ivy/angular-common.js",
+    "@angular/common/http": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__common/system/es2020/ivy/angular-http.js",
+    "@angular/animations": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__animations/system/es2020/ivy/angular-animations.js",
+    "@angular/animations/browser": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__animations/system/es2020/ivy/angular-browser.js",
+    "@angular/platform-browser": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__platform-browser/system/es2020/ivy/angular-platform-browser.js",
+    "@angular/platform-browser/animations": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__platform-browser/system/es2020/ivy/angular-animations.js",
+    "@angular/platform-browser-dynamic": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__platform-browser-dynamic/system/es2020/ivy/angular-platform-browser-dynamic.js",
+    "@angular/router": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__router/system/es2020/ivy/angular-router.js",
+    "@angular/forms": "https://cdn.jsdelivr.net/npm/@esm-bundle/angular__forms/system/es2020/ivy/angular-forms.js",
+    "single-spa-angular/internals": "https://cdn.jsdelivr.net/npm/@esm-bundle/single-spa-angular@6.2.0/system/es2020/ivy/angular-single-spa-angular-internals.js",
+    "single-spa-angular": "https://cdn.jsdelivr.net/npm/@esm-bundle/single-spa-angular@6.2.0/system/es2020/ivy/angular-single-spa-angular.js"
+  }
+}

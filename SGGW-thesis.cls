@@ -88,6 +88,7 @@
 \RequirePackage{polski}
 \selecthyphenation{polish}
 
+\renewcommand{\arraystretch}{1.5}
 \renewcommand{\listoffigures}{\begingroup
   \tocchapter
   \tocfile{\listfigurename}{lof}}
@@ -134,7 +135,7 @@
 \RequirePackage{cleveref}
 \crefformat{figure}{#2\textbf{Rys.~#1.}#3}
 \crefformat{listing}{#2\textbf{Kod~#1.}#3}
-
+\crefformat{table}{#2\textbf{Tab.~#1}#3}
 % ustawienia rysunków
 
 \RequirePackage[titles]{tocloft}
@@ -145,9 +146,11 @@
 \settowidth{\mylen}{\cftfigpresnum\cftfigaftersnum}
 \addtolength{\cftfignumwidth}{\mylen}
 
+\captionsetup[table]{name=Tab}
+
 % ustawienia BibTeX (automatyczna bibliografia)
 
-\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false]{biblatex}
+\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false,sorting=none]{biblatex}
 \addbibresource{refs.bib}
 
 % ustawienie preferencji, żeby LaTeX nie przerywał linii myślnikami

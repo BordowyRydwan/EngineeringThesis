@@ -24,11 +24,9 @@
 \definecolor{ballblue}{HTML}{21ABCD} % braces
 
 \definecolor{captioncolor}{rgb}{0.39, 0.33, 0.32} % caption color
-\captionsetup[lstlisting]{font={color=captioncolor, small,tt}}
-
-\captionsetup[lstlisting]{font={color=captioncolor, small, tt}}
 \DeclareCaptionFormat{listing}{\rule{\dimexpr\textwidth+17pt\relax}{0.4pt}\vskip1pt#1#2#3}
-\captionsetup[lstlisting]{format=listing,singlelinecheck=false, margin=0pt, font={sf},labelsep=space,labelfont=bf}
+\DeclareCaptionLabelFormat{custom}{#1 \textbf{#2.}}
+\captionsetup[lstlisting]{labelformat=custom, format=listing, singlelinecheck=false, margin=0pt, font={rm},labelsep=space,labelfont=bf}
 
 \lstdefinelanguage{ES6}{
     alsoletter={.},
@@ -52,10 +50,10 @@
     emph={[3] assert, assert.deepEqual, assert.deepStrictEqual, assert.doesNotThrow, assert.equal, assert.fail, assert.ifError, assert.notDeepEqual, assert.notDeepStrictEqual, assert.notEqual, assert.notStrictEqual, assert.ok, assert.strictEqual, assert.throws, describe, toBe, it, xdescribe, beforeEach, afterEach, beforeAll, afterAll, expect, it, xit, xdiscribe, pending, and.callThrough, and.returnValue, and.returnValues, and.callFake, and.throwError, and.stub, .not, .calls.any, .calls.count, .calls.argsFor, .calls.allArgs, .calls.all, .calls.mostRecent, .calls.first, .calls.reset, jasmine.createSpy, jasmine.createSpyObj, jasmine.any, jasmine.anything, jasmine.objectContaining, jasmine.arrayContaining, jasmine.stringMatching, asymmetricMatch,  jasmine.clock, .not.toBeTruthy, .toBeTruthy, .not.toBeFalsy, .toBeFalsy, .not.toBeDefined .toBeDefined, .not.toBeNull .toBeNull, .not.toEqual .toEqual, .not.toBeCloseTo .toBeCloseTo, .not.toContain, .toContain, .not.toMatch, .toMatch, .not.toBeGreaterThan, .toBeGreaterThan, .not.toBeLessThan, .toBeLessThan, .toThrow, .not.toThrow, .toBeNull, .not.toBeNull, .toBeDefined, .not.toBeDefined}, % Node.js Assert, Jasmine, ... keywords
 }
 
-  \lstset{
-   basicstyle=\normalsize\linespread{1.1}\footnotesize\ttfamily,
+  \lstdefinestyle{es6}{
+   basicstyle=\footnotesize\ttfamily,
    language=ES6,
-   frame=top,frame=bottom,
+   frame=b,
    breaklines=true,
    showstringspaces=false,
    tabsize=2,
@@ -68,8 +66,8 @@
    xleftmargin=17pt,
    framexleftmargin=17pt,
    framexrightmargin=17pt,
-   framexbottommargin=5pt,
-   framextopmargin=5pt,
+   framexbottommargin=10pt,
+   framextopmargin=10pt,
    alsoother={.},
    captionpos=t,
    literate=
