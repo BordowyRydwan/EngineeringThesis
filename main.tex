@@ -76,8 +76,7 @@ Taką strukturę trójwarstwową możemy opisać diagramem z \cref{fig:monolith_
 Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o modelu dwuwarstwowym.
 Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłemu dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny, a zależności między fragmentami kodu okazywały się być zbyt rozwlekłe.
 Ponadto każda zmiana w~oprogramowaniu powoduje konieczność zbudowania oraz wystawienia na środowisko produkcyjne kolejnej wersji oprogramowania. Przy dużych aplikacjach ten proces potrafi zabierać znaczącą ilość czasu. Utrudnia to też proces testowania oprogramowania, zarówno manualnie (ze względu na rosnącą ilość scenariuszy testowych) jak i automatycznie (ze względu na rosnący czas uruchomienia siatki testów).
-Zgodnie z prawem Conway'a, takie trudności odbijają się na sposobie zarządzania organizacją, która jest producentem oprogramowania.
-Zgodnie z \cite{fowler}, pojęcia \textit{monolit} w odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unix'a określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać.
+Zgodnie z \cite{fowler}, pojęcia \textit{monolit} w~odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unix'a określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać.
 
 \section{Architektura mikroserwisów}
 
@@ -86,7 +85,6 @@ W związku z tym do większych aplikacji zaczęto stosować ich podział na czę
 
 \vfill
 \clearpage
-% ogarnąć tekst tak, aby rysunek wyświetlał się w poprawnym miejscu
 
 \begin{figure}[h]
 	\centering
@@ -143,8 +141,8 @@ Wszystkie te czynniki spowodowały potrzebę podzielenia kodu na pewnego rodzaju
 	\item i inne.
 \end{itemize}
 
-Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
-Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z rysunkiem \cref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów tak, aby wynikowe podzespoły były już w pełni skoncentrowane na wydzielonej partii wartości biznesowej.
+Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w~pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
+Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z rysunkiem \cref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów tak, aby wynikowe podzespoły były już w~pełni skoncentrowane na wydzielonej partii wartości biznesowej.
 
 \begin{figure}[h]
 	\centering
@@ -268,7 +266,7 @@ Do zrealizowania tej części projektu został wykorzystany język C\# oraz śro
 	\item generator NSwag służący do generowania klas w językach C\# oraz TypeScript reprezentujących metody kontrolerów poszczególnych mikroserwisów wykonanych w ASP.NET.
 \end{itemize}
 
-Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie zachować wierność odwzorowania środowiska z wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami, można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie.
+Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie zachować wierność odwzorowania środowiska z~wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami, można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie.
 Razem z~narzędziem Docker, użyto też narzędzia \textit{docker-compose}, które umożliwia uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu.
 
 Opisane technologie mogą też być komfortowo używane w połączeniu z~oprogramowaniem Docker służącym do konteneryzacji. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET oraz połączeniem z bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku Dockerfile.
@@ -310,9 +308,6 @@ Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisó
 
 Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań nad mikrofrontendami, użyto gotowej biblioteki z elementami wizualnymi o nazwie \textit{angular-material}.
 
-  \section{Wersja monolityczna}
-
-
   \section{Wersja mikrofrontendowa}
   Logika frontendu aplikacji została podzielona na następujące mikrofrontendy:
 
@@ -353,7 +348,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   W linii 13, pobierany jest parametr z adresu URL, który w module realizującym routing aplikacji nazwano \textit{guid}. Ten parametr jest następnie sprawdzany za pomocą metody \lstinline{checkIfGuidIsValid}, która sprawdza czy parametr został poprawnie podany do komponentu. Następnie pobierany jest plik z odpowedniego serwisu za pomocą metody \lstinline{sendDownloadRequest}, a potem ten plik jest pobierany z komponentu na dysk użytkownika za pośrednictwem przeglądarki w metodzie \lstinline{downloadFile}.
 
 \chapter{Porównanie projektów frontendowych}
-  W celu zapewnienia jak największej zgodności między oboma projektami, tam gdzie jest to możliwe, logika komponentów w obu projektach jest dokładnie taka sama. W innych przypadkach, dokonano możliwie jak najprostszych korekt, aby oba projekty się skompilowały. Ponad to, w pliku \textit{angular.json} w każdym z mikrofrontendów dopisano do konfiguracji Webpacka opcję \lstinline{"excludeAngularDependencies": true}, co pozwoliło na to, żeby nie importować zależności frameworka Angular za każdym zbudowaniem aplikacji. Zamiast tego, te pliki są ładowane z repozytoriów CDN, do których dane zapisano w \textit{Container Microfrontend} w folderze \textit{import\_maps} .
+  W celu zapewnienia jak największej zgodności między oboma projektami, tam gdzie jest to możliwe, logika komponentów w obu projektach jest dokładnie taka sama. W innych przypadkach, dokonano możliwie jak najprostszych korekt, aby oba projekty się skompilowały. Ponad to, w pliku \textit{angular.json} w każdym z mikrofrontendów dopisano do konfiguracji Webpacka opcję \lstinline{"excludeAngularDependencies": true}, co pozwoliło na to, żeby nie importować zależności frameworka Angular za każdym zbudowaniem aplikacji. Zamiast tego, te pliki są ładowane z repozytoriów CDN, do których dane zapisano w \textit{Container Microfrontend} w folderze \lstinline{import_maps}.
 
   \section{Metryki kodu}
     \subsection{Ilość kodu}
@@ -365,7 +360,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \item \textit{code} - linia kodu
     \end{itemize}
 
-    Za pomocą tego narzędzia sprawdzono foldery \textit{src} wszystkich frontendów w obu projektach. Inne foldery zostały wyłączone ze sprawdzenia, gdyż zawierają one metadane projektów, pliki menadżera pakietów lub też dane generowanie automatyczne. One wszystkie nie są narzutem kodu bezpośrednio wygenerowanym przez programistę - wzięcie ich pod uwagę mogłoby wypaczyć wyniki pod względem wpływu kodu na powstanie projektu. Wyniki sprawdzenia zostały pokazane w \cref{table:cloc}
+    Za pomocą tego narzędzia sprawdzono foldery \lstinline{src} wszystkich frontendów w obu projektach. Inne foldery zostały wyłączone ze sprawdzenia, gdyż zawierają one metadane projektów, pliki menadżera pakietów lub też dane generowanie automatyczne. One wszystkie nie są narzutem kodu bezpośrednio wygenerowanym przez programistę - wzięcie ich pod uwagę mogłoby wypaczyć wyniki pod względem wpływu kodu na powstanie projektu. Wyniki sprawdzenia zostały pokazane w \cref{table:cloc}
 
     \begin{table}[h]
       \centering
@@ -391,8 +386,6 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
     \subsection{Paczki z plikami wynikowymi}
     Aplikacje zbudowano za pomocą komendy \lstinline{ng build} w aplikacjach z frameworkiem Angular oraz komendy \lstinline{webpack --mode=production} dla aplikacji kontenera. Czasy budowania aplikacji oraz rozmiary paczek przedstawia \cref{table:build_times}.
 
-    
-
     \begin{table}[h]
       \centering
       \caption{Czasy budowania aplikacji oraz rozmiary paczek wynikowych}
@@ -414,10 +407,72 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
 
     Niestety \lstinline{angular-cli}, które jest częścią frameworka Angular, nie posiada narzędzi, które pozwalałyby budować kilka aplikacji na raz. Jednocześnie komenda budująca paczkę wynikową jest zależna od ścieżki w której użytkownik się znajduje. Utrudnia to znacząco stworzenie skryptu automatyzującego, który wykonywałby komendy jednocześnie. Można więc przyjąć, że w przeciętnym projekcie informatycznym programista w najbardziej pesymistycznej sytuacji potencjalnie wykonuje te komendy jedna po drugiej, bądź używa skryptu, który nie zapewnia wykonywania się kilku komend jednocześnie. Jednak w~przeciętnych warunkach taka sytuacja nie nastąpi - budowanie dwóch aplikacji w~założeniach mają wykonywać dwa odrębne zespoły. Taki pojedynczy zespół, w~najgorszym wypadku (dla \textit{Transactions Microfrontend}) budowałby swoją część aplikacji o połowę szybciej niż cały frontend monolityczny.
 
-    Wyniki z \cref{table:build_times} pokazują, że łączny czas budowania całego projektu jest prawie 3 razy większy dla projektu mikrofrontendowego niż dla projektu z monolitycznym frontendem. Rozmiar paczki wynikowej w projekcie mikrofrontendowym jest 2 razy większy niż dla projektu monolitycznego. Należy zaznaczyć, że nie wynika z tego jeszcze, że przeglądarka użytkownika będzie musiała jednorazowo pobrać więcej danych, aby aplikacja poprawnie działała.
+    Wyniki z \cref{table:build_times} pokazują, że łączny czas budowania całego projektu jest 183\% większy dla projektu mikrofrontendowego niż dla projektu z monolitycznym frontendem. Rozmiar paczki wynikowej w projekcie mikrofrontendowym jest o 104\% większy niż dla projektu monolitycznego. Należy zaznaczyć, że nie wynika z tego jeszcze, że przeglądarka użytkownika będzie musiała jednorazowo pobrać więcej danych, aby aplikacja poprawnie działała.
 
-    \subsection{Czas ładowania aplikacji}
+    \subsection{Czas ładowania aplikacji do przeglądarki internetowej}
+    W celu wykonania testów czasu ładowania aplikacji do przeglądarki przeprowadzono test ładowania witryny na niektórych widokach z wyczyszczoną uprzednio pamięcią podręczną. Ten test oraz kolejne wykonano na 64-bitowej przeglądarce Chrome w wersji 108, na systemie operacyjnym Linux Mint. Wyniki są pokazane w \cref{table:runtimes_without_cache}.
 
+    \begin{table}[h]
+      \centering
+      \caption{Czasy ładowania aplikacji przy wyczyszczonej pamięci podręcznej przeglądarki}
+      \begin{tabular}{l|rrr|}
+      \cline{2-4}
+       & \multicolumn{3}{c|}{\textbf{Czas załadowania strony {[}s{]}}} \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Projekt}} & \multicolumn{1}{l|}{\textbf{Widok transakcji}} & \multicolumn{1}{l|}{\textbf{Widok profilu użytkownika}} & \multicolumn{1}{l|}{\textbf{Widok listy rodzin}} \\ \hline
+      \multicolumn{1}{|l|}{\textit{mikrofrontendowy}} & \multicolumn{1}{r|}{1,770} & \multicolumn{1}{r|}{1,460} & 1,770 \\ \hline
+      \multicolumn{1}{|l|}{\textit{monolityczny}} & \multicolumn{1}{r|}{0,386} & \multicolumn{1}{r|}{0,322} & 0,327 \\ \hline
+      \end{tabular}
+      \label{table:runtimes_without_cache}
+    \end{table}
+
+    Z pustą pamięcią podręczną widok transakcji oraz widok profilu użytkownika w~projekcie mikrofrontendowym ładują się do przeglądarki ponad 4 razy wolniej, a widok listy rodzin ponad 5 razy wolniej. Jest to efekt tego, że przy pustej pamięci podręcznej, skrypt pobiera biblioteki przy użyciu podanego wcześniej pliku z odnośnikami do zewnętrznych bibliotek.
+
+    Wykonano też po 10 uruchomień aplikacji w obu omawianych projektach i zmierzono czasy ładowania tych samych widoków, co w poprzednim teście. Następnie wyznaczono dla obu projektów średnią ze wszystkich pomiarów. W tym przypadku jednak, skorzystano z~tego, że zewnętrzne biblioteki są załadaowane do pamięci podręcznej przeglądarki. Wyniki pomiarów przedstawia \cref{table:runtimes_with_cache}.
+    
+    \vfill
+
+    \begin{table}[]
+      \centering
+      \caption{Czasy ładowania aplikacji przy bibliotekach w pamięci podręcznej przeglądarki}
+      \begin{tabular}{ll|rrr|}
+      \cline{3-5}
+       &  & \multicolumn{3}{c|}{\textbf{Czas załadowania strony {[}s{]}}} \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Nr}} & \textbf{Projekt} & \multicolumn{1}{l|}{\textbf{Widok transakcji}} & \multicolumn{1}{l|}{\textbf{Widok profilu użytkownika}} & \multicolumn{1}{l|}{\textbf{Widok listy rodzin}} \\ \hline
+      \multicolumn{1}{|r|}{1} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,407} & 0,445 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,181} & \multicolumn{1}{r|}{0,136} & 0,211 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{2}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,351} & 0,441 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,214} & \multicolumn{1}{r|}{0,183} & 0,267 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{3}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,434} & \multicolumn{1}{r|}{0,389} & 0,479 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,145} & \multicolumn{1}{r|}{0,138} & 0,230 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{4}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,422} & \multicolumn{1}{r|}{0,437} & 0,375 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,214} & \multicolumn{1}{r|}{0,136} & 0,183 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{5}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,405} & \multicolumn{1}{r|}{0,501} & 0,411 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,229} & \multicolumn{1}{r|}{0,169} & 0,163 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{6}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,416} & \multicolumn{1}{r|}{0,369} & 0,351 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,164} & \multicolumn{1}{r|}{0,150} & 0,223 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{7}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,390} & \multicolumn{1}{r|}{0,427} & 0,402 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,188} & \multicolumn{1}{r|}{0,189} & 0,156 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{8}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,481} & \multicolumn{1}{r|}{0,377} & 0,379 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,192} & \multicolumn{1}{r|}{0,127} & 0,144 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{9}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,437} & \multicolumn{1}{r|}{0,371} & 0,471 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,161} & \multicolumn{1}{r|}{0,134} & 0,180 \\ \hline
+      \multicolumn{1}{|r|}{\textbf{10}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,485} & \multicolumn{1}{r|}{0,366} & 0,403 \\ \hline
+      \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,210} & \multicolumn{1}{r|}{0,169} & 0,142 \\ \hline\hline
+      \multicolumn{1}{|l|}{\textbf{ŚREDNIA}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,427} & \multicolumn{1}{r|}{0,400} & 0,416 \\ \hline
+      \multicolumn{1}{l|}{} & \textit{monolityczny} & \multicolumn{1}{r|}{0,190} & \multicolumn{1}{r|}{0,153} & 0,190 \\ \cline{2-5} 
+      \end{tabular}
+      \label{table:runtimes_with_cache}
+    \end{table}
+
+    Wyniki pokazują, że średnio aplikacja ładuje się wolniej w projekcie mikrofrontendowym niż w projekcie monolitycznym o następujące wartości w punktach procentowych:
+
+    \begin{itemize}
+      \item widok transakcji - 125\%
+      \item widok profilu użytkownika - 161\%
+      \item widok listy rodzin - 118\%
+    \end{itemize}
+
+    Oba testy pokazują, że pod względem ładowania aplikacji do przeglądarki, lepsze osiągi prezentuje projekt monolityczny. Nie pomaga w tym zakresie wcześniej zastosowana i~sugerowana w dokumentacji \cite{singlespa} optymalizacja pod względem ładowania dla wszystkich mikrofrontendów z zewnętrznych źródeł.
 
   \section{Rozkład architektoniczny projektu}
   Schematy projektów obu aplikacji znajdują się na poniższych rysunkach. Na \cref{fig:monolith_fe_diagram}, zielone prostokąty odzwierciedlają mikrofrontendy realizujące konkretne funkcjonalności, natomiast kontener oznaczono kolorem szarym. Na \cref{fig:microservices_fe_diagram}, cały frontend monolityczny jest oznaczony kolorem szarym.
@@ -457,7 +512,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
 
   Dyskusja odnośnie podziału aplikacji ma duże znaczenie w kontekście skalowania aplikacji. Dodanie kolejnej warstwy do projektu aplikacji oznacza jedynie konieczność dodania referencji wyłącznie w jednej aplikacji. W przypadku projektu mikrofrontendowego oznacza to konieczność dodania referencji w każdym mikrofrontendzie, który miałby komunikować się z tą kolejną warstwą. Dlatego więc aplikacja monolityczna będzie się lepiej skalować wertykalnie.
 
-  W przypadku skalowania horyzontalnego, odrobinę korzystniej wypada architektura mikrofrontendowa. Ilość referencji do dodania w warstwie, w której dochodzi do skalowania jest taka sama dla obu projektów. Programiści implementujący nowe funkcjonalności są jednak wciąż zależni od bazy kodu, którą zastali. Jednak w przypadku mikrofrontendów, zgodnie z ich założeniami, dodawanie nowych mikrofrontendów odbywa się niezależnie od reszty kodu aplikacji. Sprzyja to zdecydowanie skalowaniu horyzontalnego aplikacji.
+  W przypadku skalowania horyzontalnego, odrobinę korzystniej wypada architektura mikrofrontendowa. Ilość referencji do dodania w warstwie, w której dochodzi do skalowania jest taka sama dla obu projektów. Programiści implementujący nowe funkcjonalności są jednak wciąż zależni od bazy kodu, którą zastali. Jednak w przypadku mikrofrontendów, zgodnie z ich założeniami, dodawanie nowych mikrofrontendów odbywa się niezależnie od reszty kodu aplikacji. Sprzyja to zdecydowanie skalowaniu horyzontalnemu aplikacji.
 
   \section{Infrastruktura i koszty}
   Infrastruktura potrzebna do uruchomienia pojedynczej aplikacji frontendowej nie jest skomplikowana. Istnieje wybór spośród wielu serwerów WWW, przykładowo:
@@ -475,11 +530,10 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   
   Jednak przy dużej ilości mikrofrontendów, zarządzanie wieloma stronami wystawionymi do hostingu WWW może stać się kłopotliwe. W takiej sytuacji lepiej sprawdzają się inne rozwiązania, które pomagają w zarządzaniu wieloma aplikacjami jednocześnie. Przykładami takich rozwiązań mogą być \textit{Amazon Elastic Kubernetes Services (EKS)} i \textit{Azure Kubernetes Services (AKS)}. Oba rozwiązania wykorzystują narzędzie Kubernetes \cite{kubernetes} służące do automatyzacji i skalowania rozwiązań kontenerowych.
 
-  Oba omawiane przykładowe projekty mikrofrontendowe posiadają wykonane konfiguracje do narzędzia Docker, które pozwalają na konteneryzację środowiska oraz uruchomienie w nim kodu aplikacji oraz budowania obrazów, które mogą być później wykorzystane przez Kubernetes. Na potrzeby lokalnego uruchomienia aplikacji został stworzony skrypt uruchamiający konfiguracje \textit{docker-compose} dla każdego serwisu i~mikrofrontendu w aplikacji. W razie potrzeby udostępnienia tego w Internecie istnieje możliwość szybkiego zmigrowania aplikacji do klastrów Kubernetes oferowanych przez dostępnych dostawców usług chmurowych.
+  Oba omawiane przykładowe projekty mikrofrontendowe posiadają wykonane konfiguracje do narzędzia Docker, które pozwalają na konteneryzację środowiska oraz uruchomienie w nim kodu aplikacji oraz budowania obrazów, które mogą być później wykorzystane przez Kubernetes. Na potrzeby lokalnego uruchomienia aplikacji został stworzony skrypt uruchamiający konfiguracje \textit{docker-compose} dla każdego serwisu i~mikrofrontendu w aplikacji. W razie potrzeby udostępnienia tego w Internecie istnieje możliwość szybkiego zmigrowania aplikacji do klastrów Kubernetes oferowanych przez dostępnych dostawców usług chmurowych. Koszty klastra Kubernetes w usłudze AKS \cite{aks_calc} w konfiguracji B2s z dwoma rdzeniami procesora, 4 GB pamięci RAM oraz 8 GB pamięci masowej na dysku HDD, wynosi 36,21 USD miesięcznie lub w przypadku trzyletniej rezerwacji - 13,61 USD miesięcznie. Warto przy tym pamiętać, że jest to najbardziej budżetowa wersja tej usługi - wszystkie dodatkowe udogodnienia wiążą się też z~dodatkowymi kosztami.
 
-  \section{Dostępność}
   \section{Testowanie kodu}
-  Pomiędzy obiema wersjami projektu nie zaobserowano różnic w zakresie uruchamiania oraz tworzenia testów automatycznych. Głównym powodem takiego wyniku może być fakt, że we frameworku Angular, testy jednostkowe są wykonywane w odniesieniu do komponentu. Nie ma znaczenia to, w jakim środowisku został umieszczony komponent - można więc też wnioskować, że zmiana architektury projektu z monolitycznej na mikroserwisową nie wpływa na takie czynniki testowania takie jak:
+  Pomiędzy obiema wersjami projektu nie ma różnic w zakresie uruchamiania oraz tworzenia testów automatycznych. Głównym powodem takiego wyniku może być fakt, że we frameworku Angular, testy jednostkowe są wykonywane w odniesieniu do komponentu. Nie ma znaczenia to, w jakim środowisku został umieszczony komponent - można więc też wnioskować, że zmiana architektury projektu z monolitycznej na mikroserwisową nie wpływa na takie czynniki testowania takie jak:
   
   \begin{itemize}
     \item czas uruchomienia siatki testów automatycznych
@@ -489,10 +543,10 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
 
   Zgadza się to z wnioskami Micheala Geersa \cite{geers_2020}, jak i Martina Fowlera \cite{fowler_2019} w zakresie testów automatycznych na warstwie frontendu aplikacji.
 
-  Jednakże, istnieją różnice w zakresie testowania manualnego obu wersji aplikacji. W przypadku, gdy wystąpi błąd przy komunikacji z backendowym odpowiednikiem mikrofrontendu, będzie się różnił zakres kodu, w którym został popełniony błąd - na korzyść architektury mikrofrontendowej. W aplikacji mikrofrontendowej, analizując zrzut stosu aplikacji można się przede wszystkim dowiedzieć, z mikrofrontendu pochodzi dany błąd, co zawęża zakres poszukiwań.
+  Jednakże, istnieją różnice w zakresie testowania manualnego obu wersji aplikacji. W~przypadku, gdy wystąpi błąd przy komunikacji z backendowym odpowiednikiem mikrofrontendu, będzie się różnił zakres kodu, w którym został popełniony błąd - na korzyść architektury mikrofrontendowej. W aplikacji mikrofrontendowej, analizując zrzut stosu aplikacji można się przede wszystkim dowiedzieć, z którego mikrofrontendu pochodzi dany błąd, co zawęża zakres poszukiwań przyczyny błędu.
 
   \section{Zależności między modułami i projektami}
-  Do każdego mikrofrontendu użyto kilku zewnętrznych bibliotek, z czego duża z nich pokrywała się w większości mikrofrontedów. Przykładami takich często używanych zależności są pliki bibliotek: \textit{single-spa}, \textit{Angular}, \textit{Angular Material}. Taka sytuacja powoduje, że użytkownik jest zmuszany do pobierania tych samych bibliotek więcej niż jeden raz. To powoduje, że do przeglądarki jest pobierane więcej danych niż jest to potrzebne. Część z tych problemów przy realizacji mikrofrontendowej wersji projektu udało się rozwiązać poprzez zadeklarowanie przy budowaniu aplikacji, żeby nie dodawać do paczki ze zbudowaną aplikacją tych bibliotek. Takie pliki będą pobierane raz przy pierwszym odwiedzeniu witryny z aplikacją. Odnośniki do takich bibliotek zostały zebrane w plikach typu JSON w folderze \textit{import\_maps} aplikacji \textit{Container Microfrontend}. Listing \cref{lst:import_map} zawiera plik z odnośnikami do bibliotek, który posłużył do manualnych testów aplikacji.
+  Do każdego mikrofrontendu użyto kilku zewnętrznych bibliotek, z czego duża z nich pokrywała się w większości mikrofrontedów. Przykładami takich często używanych zależności są pliki bibliotek: \textit{Single SPA}, \textit{Angular}, \textit{Angular Material}. Taka sytuacja powoduje, że użytkownik jest zmuszany do pobierania tych samych bibliotek więcej niż jeden raz. To powoduje, że do przeglądarki jest pobierane więcej danych niż jest to potrzebne. Część z tych problemów przy realizacji mikrofrontendowej wersji projektu udało się rozwiązać poprzez zadeklarowanie przy budowaniu aplikacji, żeby nie dodawać do paczki ze zbudowaną aplikacją tych bibliotek. Takie pliki będą pobierane raz przy pierwszym odwiedzeniu witryny z aplikacją. Odnośniki do takich bibliotek zostały zebrane w plikach typu JSON w folderze \lstinline{import\_maps} aplikacji \textit{Container Microfrontend}. Listing \cref{lst:import_map} zawiera plik z odnośnikami do bibliotek, który posłużył do manualnych testów aplikacji.
 
   \lstinputlisting[style=es6, label=lst:import_map, caption=Obiekt zawierający odnośniki do bibliotek z zewnętrznych źródeł]{listings/import_map.json}
 
@@ -501,8 +555,38 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   \pagebreak
 
   \section{Możliwości w zakresie zarządzania projektami}
+  Możliwość podziału aplikacji na wiele niezależnych od siebie bytów stanowi szansę na ograniczenie ilości węzłów komunikacyjnych między odrębnymi zespołami. Potencjalnymi skutkami tego rodzaju optymalizacji są:
+
+  \begin{itemize}
+    \item zmniejszenie ilości spotkań,
+    \item zmniejszenie ilości osób, które są potrzebne do wprowadzenia ustaleń krytycznych dla projektu,
+    \item wprowadzenie oddzielnych cykli planowania dla poszczególnych cykli produkcji aplikacji,
+    \item możliwość pracy nad wieloma częściami aplikacji jednocześnie,
+    \item zmniejszenie ilości wiedzy na temat projektu krytycznie potrzebnej dla nowej osoby w projekcie do skutecznego wdrożenia
+  \end{itemize}  
+
+  Jednak warto zauważyć, że ważny jest sam fakt zaprojektowania aplikacji w taki sposób, aby poszczególne części projektu były możliwie najbardziej niezależne od siebie nawzajem. Na rysunkach \cref{fig:microservices_fe_diagram} i \cref{fig:monolith_fe_modules_diagram} widać, że taki podział jest możliwy w przypadku obu omawianych projektów.
+
+  Prawo Conwaya \cite{conway} mówi o tym, że "każda organizacja, która wytwarza produkt, który jest odwzorowaniem jej struktury organizacyjnej". Oznacza to, że fakt wpływu struktury zarządzania firmy na projekt programistyczny, jest według tego prawa implikacją jednostronną. Implikacja w drugą stronę, czyli "projekt programistyczny wpływa na zarządzanie firmą" nie zachodzi. Można z tego wywnioskować, że niezależnie od tego, nawet projekt zrealizowany przy użyciu mikrofrontendów przy wadliwym zarządzaniu projektem nie uratuje zespołu projektowego od wszystkich czynników, które mają być w~założeniach optymalizowane przez mikrofrontendy.
+
+  Wzrost ilości infrastruktury potrzebnej do utrzymania mikrofrontendów powoduje również zapotrzebowanie na większą ilość osób zajmujących się \textit{inżynierią DevOps}. Zależnie od potrzeb biznesowych, może się też okazać, że potrzebne są dodatkowe godziny spotkań w sprawie infrastruktury mikrofrontendowej, narzędzi potrzebnych do wdrożenia produkcyjnego i deweloperskiego aplikacji. Ten czynnik może spowodować, że mikrofrontendy, które w założeniu miały zoptymalizować komunikację w zespole projektowym, jedynie przeniosą zaoszczędzone w ten sposób godziny robocze na inny obszar projektu, bądź nawet wydłużą w czasie prace nad projektem.
 
 \chapter{Podsumowanie}
+Pod względem osiągów technicznych, na wszystkich zaprezentowanych polach lepiej prezentuje się projekt wykonany w architekturze monolitycznej. Zawartość aplikacji pojawia się szybciej na ekranie użytkownika w tym projekcie oraz przy procesie ładowania zawartości pobierana jest mniejsza ilość danych. Jest możliwe, że dla większej skali projektu, wyniki są inne.
+
+Projekt monolityczny generuje również mniej plików oraz mniej linii kodu. Jednak pojedyncza aplikacja mikrofrontendowa buduje się szybciej niż cały projekt monolityczny. Powoduje to, że po dokonaniu zmiany w projekcie, szybsze będzie zbudowanie tego mikrofrontendu, który zawierał zmianę niż całego monolitu - zwiększa to potencjalnie komfort pracy nad projektem, a w dużej skali może zaowocować oszczędnością na czasie. Pod tym względem, mikrofrontendowy projekt oferuje więcej niż monolityczny.
+
+Testowanie obu projektów niczym się nie różni. Jest to możliwe dzięki zastosowaniu paradygmatu programowania komponentowego do budowy pojedynczej aplikacji we frameworku \textit{Angular}. Możliwe są jedynie delikatne odstępstwa przy testach integracyjnych i E2E.
+
+Struktura architektoniczna projektu mikrofrontendowego jest teoretycznie bardziej skomplikowana niż projektu monolitycznego. Jednak gdyby wziąć przy rozważaniu monolitu pod uwagę szczegółową budowę modułów, może się okazać, że struktura aplikacji jest podobna, jeśli nie identyczna jak mikrofrontendowa. Dlatego ważny jest sam fakt podzielenia aplikacji oraz rozwagi w procesie tworzenia aplikacji, a później jej utrzymywania i skalowania. W praktyce, projekt mikrofrontendowy ma lepsze możliwości skalowania horyzontalnego, a projekt monolityczny lepiej się skaluje wertykalnie ze względu na mniejszą ilość zależności. W tym zakresie, obie koncepcje architektoniczne mogą się nadawać do spełnienia konkretnych potrzeb biznesowych.
+
+Skomplikowanie struktury projektu po stronie mikrofrontendów powoduje też wzrost liczby zależności, które są powtarzane w wielu mikrofrontendach. Pomimo zastosowania technik optymalizacyjnych, nie osiągnięto wydajności na poziomie projektu monolitycznego. Częściowo odpowiedzialny jest za to dodatkowy narzut w postaci dodatkowej (w stosunku do monolitu) biblioteki \textit{Single SPA}. Większa ilość zależności w~projekcie mikrofrontendowym jest zdecydowanie jego wadą.
+
+W zakresie zarządzania projektami, dobrze zarządzany proces produkcji oprogramowania będzie prowadził do sukcesu zarówno przy zastosowaniu mikrofrontendów jak i przy zwykłym monolicie. Nie można zawierzyć powodzenia projektu jedynie zastosowanej architekturze oprogramowania. Dużo ważniejsza w tym zakresie jest struktura organizacyjna w zespole, który podejmuje się produkcji oprogramowania.
+
+Podsumowując, dla projektu w małej lub średniej (takiej jak omawiany projekt aplikacji do zarządzania wydatkami) skali zdecydowanie bardziej będzie się nadawała zwyczajna architektura monolityczna. Jedynie w przypadku dużych projektów (kilkadziesiąt mikrofrontendów i więcej) mikrofrontendy jawią się jako opcja, która może wspomóc proces podziału projektu aplikacji w kierunku możliwie jak największej separacji modułów od siebie.
+
+
 
 \printbibliography[heading=bibnumbered,title={Bibliografia}]
 
