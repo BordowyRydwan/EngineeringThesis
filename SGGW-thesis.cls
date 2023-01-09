@@ -1,6 +1,17 @@
 %
 % Klasa do pisania prac dyplomowych - licencjackich, inzynierskich i magisterskich - w SGGW
 
+% Wersja 1.07 z 2022.12.30
+% Autor: Dawid Wijata
+% Zmiany:
+% 1. Konfiguracja ustawień pod automatyczne generowanie plików bibliografii na podstawie plików .bib.
+% 2. Eliminacja łamania wyrazów myślnikiem przy przejściu do nowej linii.
+% 3. Ustawienie podpisów pod rysunki, listingi i tabele za pomocą paczki "cleveref".
+% 4. Dodanie obsługi listingów z fragmentami kodu.
+% 5. Dodanie opcji wygenerowania spisu listingów i rysunków.
+%    Zgodnie z oficjalnym szablonem SGGW takie spisy nie są obowiązkowe, także zastosowanie jest opcjonalne.
+% 6. Dodanie styli do listingów dla najpopularniejszych języków programowania.
+
 % Wersja 1.061 z 2022.01.26
 % Autor: Leszek Chmielewski
 % Zmiany:
@@ -21,7 +32,7 @@
 % Wersja 1.05 z 2019.06.25
 % Autorzy: Pawel Wasil, Bartosz Sowa
 % Zmiany:
-% 1. Zmiana \onehalfspacing na \setstretch{1.4} - dzieki temu interlinia jest niemal identyczna jak w wersji w Word, czyli odtep 1.5.
+% 1. Zmiana \onehalfspacing na \setstretch{1.4} - dzieki temu interlinia jest niemal identyczna jak w wersji w Word, czyli odstep 1.5.
 %
 % Wersja 1.04 z 2018.01.17.
 % Autorzy: Pawel Wasil, Michal Rosa
@@ -56,9 +67,9 @@
 % Wersja 1.0 z 2017.01.16.
 % Autor: Lukasz Adamczyk
 %
+
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
 \ProvidesClass{SGGW-thesis}[2022/01/26 LaTeX class for writing theses in SGGW]
-
 
 \DeclareOption{multip}{\@multiptrue}
 \DeclareOption{onep}{\@multipfalse}
@@ -77,33 +88,21 @@
 \RequirePackage{listings,chngcntr}
 \RequirePackage{graphicx}
 \RequirePackage[T1]{fontenc}
-\RequirePackage{mathptmx} %czcionka Times New Roman
+\RequirePackage{mathptmx} % czcionka Times New Roman
 \RequirePackage[utf8]{inputenc}
-\RequirePackage[nottoc,numbib]{tocbibind} %bibliografia z numerem i w spisie tresci
-
-\RequirePackage[labelfont=bf,labelsep=period]{caption} %tytuly rys i tab: gruba czcionka, kropka
+\RequirePackage[nottoc,numbib]{tocbibind} % bibliografia z numerem i w spisie tresci
+\RequirePackage[labelfont=bf,labelsep=period]{caption} % tytuly rys i tab: gruba czcionka, kropka
 
 \RequirePackage[a4paper,top=2.5cm,bottom=2.5cm,inner=3.5cm,outer=2cm]{geometry}
 
 \RequirePackage{polski}
 \selecthyphenation{polish}
 
-\renewcommand{\arraystretch}{1.5}
-\renewcommand{\listoffigures}{\begingroup
-  \tocchapter
-  \tocfile{\listfigurename}{lof}}
-
-\renewcommand{\lstlistoflistings}{\begingroup
-  \tocsection
-  \tocchapter
-  \tocfile{\lstlistlistingname}{lol}
-\endgroup}
-
 \RequirePackage{titlesec} % zmiana formatu chapter do (1 Nazwa)
 \titleformat{\chapter}{\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
-\RequirePackage{enumitem} %zmiana odleglosci w listach - generalne zmniejszenie
+\RequirePackage{enumitem} % zmiana odleglosci w listach - generalne zmniejszenie
 % Jesli efekt nie jest wlasciwy, to trzeba stosowac opcje pakietu "enumitem" w konkretnych listach.
 \setlist[itemize]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=6pt}
 \setlist[description]{itemsep=2pt,parsep=0pt,partopsep=0pt,topsep=2pt}
@@ -118,26 +117,20 @@
 
 \renewcommand{\normalsize}{\fontsize{12}{13}\selectfont}
 
-\newcommand{\Overnormal}[1]{\@setfontsize\Overnormal{14pt}{16}{#1}}	%definicja czcionki 14pt
-\newcommand{\VeryLarge}[1]{\@setfontsize\VeryLarge{16pt}{18}{#1}}	%definicja czcionki 16pt
-\newcommand{\TitleFont}[1]{\@setfontsize\TitleFont{18pt}{22}{#1}}	%definicja czcionki 18pt
-\newcommand{\VeryVeryLarge}[1]{\@setfontsize\VeryVeryLarge{24pt}{28}{#1}} %definicja czcionki 24pt
+\newcommand{\Overnormal}[1]{\@setfontsize\Overnormal{14pt}{16}{#1}}	% definicja czcionki 14pt
+\newcommand{\VeryLarge}[1]{\@setfontsize\VeryLarge{16pt}{18}{#1}}	% definicja czcionki 16pt
+\newcommand{\TitleFont}[1]{\@setfontsize\TitleFont{18pt}{22}{#1}}	% definicja czcionki 18pt
+\newcommand{\VeryVeryLarge}[1]{\@setfontsize\VeryVeryLarge{24pt}{28}{#1}} % definicja czcionki 24pt
 
-\newcommand{\version}{1.061}
+\newcommand{\version}{1.07}
 
-% ustawienia listingów
-
-\usepackage{./stylings/es6listings}
-\usepackage{./stylings/weblistings}
-\renewcommand{\lstlistlistingname}{Spis listingów}
-\renewcommand{\lstlistingname}{Kod}
-
+% podpisy w ondośnikach za pomocą paczki cleverref (użycie: \cref{})
 \RequirePackage{cleveref}
 \crefformat{figure}{#2\textbf{Rys.~#1.}#3}
 \crefformat{listing}{#2\textbf{Kod~#1.}#3}
 \crefformat{table}{#2\textbf{Tab.~#1}#3}
-% ustawienia rysunków
 
+% ustawienia rysunków
 \RequirePackage[titles]{tocloft}
 \renewcommand{\figurename}{Rys.}
 \renewcommand{\cftfigpresnum}{Rys. }
@@ -145,16 +138,39 @@
 \newlength{\mylen}
 \settowidth{\mylen}{\cftfigpresnum\cftfigaftersnum}
 \addtolength{\cftfignumwidth}{\mylen}
+\renewcommand{\arraystretch}{1.5}
+\renewcommand{\listoffigures}{\begingroup
+  \tocchapter
+  \tocfile{\listfigurename}{lof}}
 
+% ustawienia listingów
+\RequirePackage{./stylings/es6listings}
+\RequirePackage{./stylings/weblistings}
+\RequirePackage{./stylings/javalistings}
+\RequirePackage{./stylings/csharplistings}
+\renewcommand{\lstlistlistingname}{Spis listingów}
+\renewcommand{\lstlistingname}{Kod}
+\renewcommand{\lstlistoflistings}{\begingroup
+  \tocsection
+  \tocchapter
+  \tocfile{\lstlistlistingname}{lol}
+\endgroup}
+\def\inline{\lstinline[basicstyle=\ttfamily,keywordstyle={}]}
+\lstset{
+    language=C,
+    basicstyle=\ttfamily,
+    keywordstyle=\lst@ifdisplaystyle\color{blue}\fi,
+    commentstyle=\color{gray}
+}
+
+% ustawienia tabel
 \captionsetup[table]{name=Tab}
 
 % ustawienia BibTeX (automatyczna bibliografia)
-
-\usepackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false,sorting=none]{biblatex}
+\RequirePackage[style=numeric-comp,block=ragged,language=polish,dateabbrev=false,sorting=none]{biblatex}
 \addbibresource{refs.bib}
 
 % ustawienie preferencji, żeby LaTeX nie przerywał linii myślnikami
-
 \tolerance=1
 \emergencystretch=\maxdimen
 \hyphenpenalty=10000

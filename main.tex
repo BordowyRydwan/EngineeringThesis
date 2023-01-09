@@ -19,29 +19,23 @@
 \raggedbottom
 
 \begin{document}
+
+% uniezależnienie numerów tabel, rysunków i listingów od rozdziału
 \counterwithout{table}{chapter}
 \counterwithout{figure}{chapter}
 \counterwithout{lstlisting}{chapter}
-\def\inline{\lstinline[basicstyle=\ttfamily,keywordstyle={}]}
-\lstset{
-    language=C,
-    basicstyle=\ttfamily,
-    keywordstyle=\lst@ifdisplaystyle\color{blue}\fi,
-    commentstyle=\color{gray}
-}
+
 \makeatother
 
 \maketitle
 \statementpage
 \abstractpage
 {Porównanie aplikacji frontendowych opartych na mikrofrontendach z tradycyjną architekturą monolityczną na przykładzie aplikacji do zarządzania finansami osobistymi}
-{Tematem niniejszej pracy była implementacja i poźniejsze porównanie frontendu dwóch wersji aplikacji do zarządzania finanasami osobistymi w dwóch architekturach - mikrofrontendowej i monolitycznej. Praca składa się z części teoretycznej wprowadzającej w pojęcie mikroserwisów i mikrofrontendów oraz części praktycznej porównującej obie implementacje pod względem metryk kodu, wydajności, kosztów obu rozwiązań oraz zarządzania projektem.}
+{Tematem niniejszej pracy była implementacja i poźniejsze porównanie frontendu dwóch wersji aplikacji do zarządzania finansami osobistymi w dwóch architekturach - mikrofrontendowej i monolitycznej. Praca składa się z części teoretycznej wprowadzającej w pojęcie mikroserwisów i mikrofrontendów oraz części praktycznej porównującej obie implementacje pod względem metryk kodu, wydajności, kosztów obu rozwiązań oraz zarządzania projektem.}
 {architektura rozproszona, mikroserwisy, mikrofrontendy, architektura oprogramowania}
 {Comparison of Microfrontend Applications and Monolith Frontend Applications Based on the Example of Expense Tracker}
 {The subject of this thesis was to implement and compare frontend parts of expense tracker web application written in two different architectural concepts - monolith and microfrontends. The first part is an introduction to microservice and microfrontend concepts. The second one consists of a comparison of both application versions by terms of code metrics, performance, financial costs of both solutions and project management.}
 {distributed architecture, microservices, microfrontends, software architecture}
-
-
 
 % Spis treści może być złożony z pojedynczą interlinią, np. jeśli jedna linia wychodzi na następną stronę.
 % W przeciwnym razie spis treści wstawić bez powyższego rozkazu i klamry.
@@ -52,8 +46,9 @@
 
 \startchapterfromoddpage % niezależnie od długości spisu treści pierwszy rozdział zacznie się na nieparzystej stronie
 
-\chapter{Wprowadzenie do mikroserwisów}
-% tu wstęp
+\chapter{Wstęp}
+Celem niniejszej pracy była implementacja i porównanie warstwy frontendowej aplikacji do zarządzania finansami w dwóch wersjach do zarządzania finansami osobistymi w dwóch architekturach - mikrofrontendowej i monolitycznej.
+
 \section{Architektura monolityczna}
 Monolitem, bądź programem zaprojektowanym zgodnie z architekturą monolityczną nazywamy program uruchamiany w całości za pomocą jednego pliku wykonywalnego. W~aplikacjach webowych taka architektura spełnia założenia modelu trójwarstwowego. Na te warstwy składają się:
 
@@ -68,15 +63,15 @@ Taką strukturę trójwarstwową możemy opisać diagramem z \cref{fig:monolith_
 \begin{figure}[h]
 	\centering
 	\captionsetup{justification=centering}
-	\includegraphics[width=0.8\textwidth]{monolith_diagram.png}
+	\includegraphics[width=0.75\textwidth]{monolith_diagram.png}
 	\caption{Podział na warstwy dla przykładowego sklepu internetowego \\ w architekturze monolitycznej}
 	\label{fig:monolith_diagram}
 \end{figure}
 
-Warstwa druga jest czasami pomijana przez twórców oprogramowania pozwalając interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o modelu dwuwarstwowym.
-Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłym dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny. Zależności między fragmentami kodu okazywały się być zbyt rozwlekłe.
+Warstwa druga jest czasami pomijana przez twórców oprogramowania, co pozwala interfejsowi użytkownika na bezpośredni dostęp do danych. Różnicą między nimi jest brak istnienia warstwy oddzielającej logikę biznesową od interfejsu użytkownika. Wtedy możemy mówić o modelu dwuwarstwowym.
+Wraz z rozwojem aplikacji w modelu dwuwarstwowym i trójwarstwowym oraz ciągłym dopisywaniu do nich nowych funkcjonalności, kod tych aplikacji stawał się coraz bardziej nieczytelny. Drzewo zależności między fragmentami kodu okazywały się być zbyt rozbudowane.
 Ponadto każda zmiana w~oprogramowaniu powoduje konieczność zbudowania oraz wystawienia na środowisko produkcyjne kolejnej wersji oprogramowania. Przy dużych aplikacjach ten proces potrafi zabierać znaczącą ilość czasu. Utrudnia to też proces testowania oprogramowania, zarówno manualnie (ze względu na rosnącą ilość scenariuszy testowych) jak i automatycznie (ze względu na rosnący czas uruchomienia siatki testów).
-Zgodnie z \cite{fowler}, pojęcia \textit{monolit} w~odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unix'a określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać.
+Zgodnie z~pracą \cite{fowler}, pojęcia \textit{monolit} w~odniesieniu do oprogramowania pierwotnie używała społeczność programistów systemu operacyjnego Unix. Programiści Unix'a określali tak systemy, które stają się zbyt duże, by móc je komfortowo utrzymywać.
 
 \section{Architektura mikroserwisów}
 
@@ -107,7 +102,7 @@ Komunikacja między mikroserwisami zachodzi przy użyciu protokołów sieciowych
 Przedstawione zalety są znaczące nie tylko z punktu widzenia projektowania i tworzenia oprogramowania, ale też z punktu zarządzania projektami. Jasny podział projektu na niezależne od siebie części pozwala też na przyporządkowanie ludzi do zespołów mniejszych, ale ściśle skoncentrowanych na konkretnym wycinku wiedzy potrzebnym do realizacji danej funkcjonalności.
 Autonomiczność takich zespołów pozwala na zmniejszenie ilości potrzebnych kontaktów między zespołami w celu ustalenia rozwiązań problemów i dalszego przebiegu projektu. Pomaga to między innymi zmniejszyć ilość spotkań oraz skrócić te krytycznie potrzebne do realizacji projektu.
 
-Rozrośnięcie się infrastruktury używającej mikroserwisów zwiększa też zapotrzebowanie na ludzi zajmujących się wsparciem developerów w zakresie konfiguracji infrastruktury (tzw. \textit{inżynierowie DevOps}), a w przypadku zastosowania technologii chmurowych, również specjalistów w zakresie technologii takich jak \textit{Microsoft Azure}, \textit{Google Cloud} oraz \textit{Amazon Web Services}. Taka sytuacja również przyczynia się do zwiększenia kosztów związanych z oprogramowaniem w architekturze mikroserwisowej. Można jednak uznać ją za czynnik zmuszający firmy do rozwoju w~zakresie R\&D (\textit{Research and Development}) w celu ustalenia własnych standardów architektonicznych, które będą optymalne dla ich potrzeb biznesowych w zakresie realizacji mikroserwisów. Mimo to, czynniki kosztowe powodują, że wybór architektury mikroserwisowej do projektu może nie być optymalny dla małych i średnich projektów.
+Rozrośnięcie się infrastruktury używającej mikroserwisów zwiększa też zapotrzebowanie na ludzi zajmujących się wsparciem developerów w zakresie konfiguracji infrastruktury (tzw. \textit{inżynierowie DevOps}), a w przypadku zastosowania technologii chmurowych, również specjalistów w zakresie technologii takich jak Microsoft Azure, Google Cloud oraz Amazon Web Services. Taka sytuacja również przyczynia się do zwiększenia kosztów związanych z oprogramowaniem w architekturze mikroserwisowej. Można jednak uznać ją za czynnik zmuszający firmy do rozwoju w~zakresie R\&D (\textit{Research and Development}) w celu ustalenia własnych standardów architektonicznych, które będą optymalne dla ich potrzeb biznesowych w zakresie realizacji mikroserwisów. Mimo to, czynniki kosztowe powodują, że wybór architektury mikroserwisowej do projektu może nie być optymalny dla małych i średnich projektów.
 
 Mikroserwisy powodują też konieczność uzgodnienia konwencji między projektami w~sprawach takich jak:
 
@@ -118,7 +113,7 @@ Mikroserwisy powodują też konieczność uzgodnienia konwencji między projekta
 	\item autoryzacja i uwierzytelnianie,
 	\item standard podziału kodu na projekty lub moduły.
 \end{itemize}
-Brak zgody między projektami w powyższych kwestiach może doprowadzić do jeszcze większego nieporządku, niż gdyby projekt był realizowany jako monolit. Ponadto, uporządkowana struktura projektu mikroserwisowego pozwala na replikowanie schematu na dowolną skalę, a co za tym idzie, automatyzację procesu tworzenia nowych serwisów. Można to zrealizować na przykład za pomocą szablonów projektu aplikowanych do środowiska programistycznego, obrazów środowiska \textit{Docker} lub idąc jeszcze dalej - odpowiednio ustawionym klastrze \textit{Kubernetes}. Jednak przy sprostaniu tym wyzwaniom architektonicznym na etapie projektowania oprogramowania zyskamy dzięki mikroserwisom możliwość zarządzania projektem o dowolnej wielkości w sposób ściśle uporządkowany i z zachowaniem dobrej jakości kodu źródłowego oraz łatwe dostosowanie projektu do potrzeb biznesowych i metodologii zwinnych zarządzania projektami.
+Brak zgody między projektami w powyższych kwestiach może doprowadzić do jeszcze większego nieporządku, niż gdyby projekt był realizowany jako monolit. Ponadto, uporządkowana struktura projektu mikroserwisowego pozwala na replikowanie schematu na dowolną skalę, a co za tym idzie, automatyzację procesu tworzenia nowych serwisów. Można to zrealizować na przykład za pomocą szablonów projektu aplikowanych do środowiska programistycznego, obrazów środowiska Docker \cite{docker} lub idąc jeszcze dalej - odpowiednio ustawionym klastrze Kubernetes \cite{kubernetes}. Jednak przy sprostaniu tym wyzwaniom architektonicznym na etapie projektowania oprogramowania zyskamy dzięki mikroserwisom możliwość zarządzania projektem o dowolnej wielkości w sposób ściśle uporządkowany i z zachowaniem dobrej jakości kodu źródłowego oraz łatwe dostosowanie projektu do potrzeb biznesowych i metodologii zwinnych zarządzania projektami.
 
 \chapter{Mikrofrontendy}
 \section{Wstęp}
@@ -128,7 +123,7 @@ Pomimo zastosowania mikroserwisów przy projektowaniu logiki backendowej częśc
 	\item powstawanie coraz bardziej kreatywnych i szczegółowych efektów wizualnych,
 	\item optymalizacja działania skryptów JavaScript,
 	\item zwiększająca się dojrzałość działalności programistów frontendu,
-	\item rozwój frameworków strukturyzujących projekty frontendowe takich jak \textit{Angular}, \textit{React}, \textit{Vue} (produkują one dziesiątki tysięcy linii kodu wynikowego).
+	\item rozwój frameworków strukturyzujących projekty frontendowe takich jak Angular \cite{angular}, React \cite{react}, Vue \cite{vue} (produkują one dziesiątki tysięcy linii kodu wynikowego).
 \end{itemize}
 
 Wszystkie te czynniki spowodowały potrzebę podzielenia kodu na pewnego rodzaju moduły. Najpopularniejsze frameworki radzą sobie jednak wystarczająco dobrze ze skutkami nagromadzenia dużej ilości kodu, aby używać ich w projektach komercyjnych. Najlepiej z tym problemem radzi sobie framework Angular, który proponuje programistom systemowy podział na moduły, oraz kilka propozycji na podziały niższego stopnia na struktury takie jak:
@@ -141,7 +136,7 @@ Wszystkie te czynniki spowodowały potrzebę podzielenia kodu na pewnego rodzaju
 	\item i inne.
 \end{itemize}
 
-Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w~pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zepsołów.
+Jednak struktura organizacyjna całego projektu oprogramowania różni się znacząco po stronie backendu, jak i frontendu. Może to powodować różne nieścisłości organizacyjne oraz zwiększać liczbę zapytań wykonanych między członkami zespołu w celu uzgodnienia szczegółów projektu. Zaczęto się więc rozglądać za sposobem organizacji pracy zespołu frontendowego takiego, żeby móc podzielić osoby pracujące nad projektem na zespoły w~pełni skoncentrowane na konkretnych funkcjonalnościach. Takie podejście zwiększa autonomiczność zespołów.
 Takim sposobem okazało się być dostosowanie frontendowych części projektu do architektury mikroserwisowej. Zgodnie z rysunkiem \cref{fig:microfrontends_diagram} można podzielić zespół programistów frontendu na funkcjonalne grupy dostosowane do wcześniej utworzonych podzespołów tak, aby wynikowe podzespoły były już w~pełni skoncentrowane na wydzielonej partii wartości biznesowej.
 
 \begin{figure}[h]
@@ -157,14 +152,14 @@ Zgodnie z wynikami ankiety \cite{tsh_2022}, 24.6\% programistów biorących udzi
 
 \section{Dodatkowe ograniczenia względem mikroserwisów}
 \subsection{Ograniczone zasoby obliczeniowe}
-W przypadku prac nad backendowymi częściami projektu, coraz mniej zwraca się uwagę na optymalizację działania algorytmów używanych w oprogramowaniu. Pamięć operacyjna oraz masowa stały się dużo tańsze niż kilka lat temu. Dla klienta stało się tańsze zainwestowanie maksymalnie kilku tysięcy złotych na dołożenie pamięci do serwera, udostępniającego żądaną usługę sieciową, niż zainwestowanie wielokrotności tej kwoty w~czas pracy programistów, którzy zoptymalizują wadliwy algorytmicznie kod.
-Nie ma to jednak zastosowania przy pracy nad frontendem. Przeglądarka, w której koniec końców efekty pracy są pokazane użytkownikowi końcowemu, oferuje jedynie swoje zasoby pamięci - nie można użyć tak dużego odsetka zasobów komputera, jak w przypadku backendu. Poza tym, minimalne odstępstwa od optymalizacji są zauważalne dla użytkownika końcowego. Każde przycięcie się elementów interfejsu, brak płynności powodują irytację użytkownika, a co dalej za tym idzie, spadek zadowolenia z używania wyprodukowanego oprogramowania. W przypadku zastosowania mikrofrontendów problem narasta. De facto ładujemy do przeglądarki jednocześnie kilka pełnoprawnych aplikacji i wymagamy od nich, aby one wszystkie podzieliły się niewielkimi zasobami pamięci i procesora zaalokowanymi przez przeglądarkę w taki sposób, aby każda z nich działała w sposób komfortowy dla użytkownika. Na szczęście rozwiązanie problemu jest konceptualnie bardzo proste. Wystarczy ładować do przeglądarki tylko te mikrofrontendy, które w danym momencie są użytkownikowi krytycznie potrzebne. Najczęściej stosowanym sposobem implementacji takiego rozwiązania jest ładowanie konkretnych mikrofrontendów po zmianie adresu URL w przeglądarce. Gotowe rozwiązania implementujące mikrofrontendy, takie jak \textit{Single SPA} optymalizują ładowanie zasobów jeszcze bardziej poprzez zastosowanie wzorca \textit{Lazy loading}. Dzięki tej prostej sztuczce, można ściśle kontrolować ładowanie się mikrofrontendów do przeglądarki.
+W przypadku prac nad backendowymi częściami projektu, coraz mniej zwraca się uwagę na optymalizację działania algorytmów używanych w oprogramowaniu. Pamięć operacyjna oraz masowa stały się dużo tańsze w przeliczeniu na jednostkę pamięci niż kilka lat temu. Dla klienta stało się tańsze zainwestowanie maksymalnie kilku tysięcy złotych na dołożenie pamięci do serwera, udostępniającego żądaną usługę sieciową, niż zainwestowanie wielokrotności tej kwoty w~czas pracy programistów, którzy zoptymalizują wadliwy algorytmicznie kod.
+Nie ma to jednak zastosowania przy pracy nad frontendem. Przeglądarka, w której koniec końców efekty pracy są pokazane użytkownikowi końcowemu, oferuje jedynie swoje zasoby pamięci - nie można użyć tak dużego odsetka zasobów komputera, jak w przypadku backendu. Poza tym, minimalne odstępstwa od optymalizacji są zauważalne dla użytkownika końcowego. Każde przycięcie się elementów interfejsu, brak płynności powodują irytację użytkownika, a co dalej za tym idzie, spadek zadowolenia z używania wyprodukowanego oprogramowania. W przypadku zastosowania mikrofrontendów problem narasta. De facto ładujemy do przeglądarki jednocześnie kilka pełnoprawnych aplikacji i wymagamy od nich, aby one wszystkie podzieliły się niewielkimi zasobami pamięci i procesora zaalokowanymi przez przeglądarkę w taki sposób, aby każda z nich działała w sposób komfortowy dla użytkownika. Na szczęście rozwiązanie problemu jest konceptualnie bardzo proste. Wystarczy ładować do przeglądarki tylko te mikrofrontendy, które w danym momencie są użytkownikowi krytycznie potrzebne. Najczęściej stosowanym sposobem implementacji takiego rozwiązania jest ładowanie konkretnych mikrofrontendów po zmianie adresu URL w przeglądarce. Gotowe rozwiązania implementujące mikrofrontendy, takie jak Single SPA \cite{singlespa} optymalizują ładowanie zasobów jeszcze bardziej poprzez zastosowanie wzorca Lazy loading. Dzięki tej prostej sztuczce, można ściśle kontrolować ładowanie się mikrofrontendów do przeglądarki.
 
 \subsection{Zasoby współdzielone}
 W przypadku, gdy na potrzeby jednego z mikrofrontendów tworzony jest reużywalny komponent (przykładowo tabela o odpowiednim wyglądzie i zachowaniu), może zaistnieć potrzeba zastosowania takiego komponentu w innym mikrofrontendzie. Wtedy pierwszym z pomysłów, jakie mogą powstać, jest przekopiowanie kodu z jednego do drugiego mikrofrontendu. Jednak to rozwiązanie tworzy nowe problemy.
 
 Po pierwsze, każda zmiana w komponencie, w celu uzgodnienia wersji wymaga zmian w tym samym komponencie we wszystkich mikrofrontendach używających tego projektu. W przypadku kilku mikrofrontendów jest to możliwe, ale w przypadku, gdy mamy takich mikrofrontendów setki lub tysiące, takie cykliczne zmiany są wręcz niemożliwe do wykonania i zabierałyby one duży odsetek czasu poświęconego na projekt.
-Rozwiązaniem problemu okazuje się być umieszczeniu tego kodu jedynie jeden raz w zewnętrznym repozytorium (technicznie mogą to być prywatne repozytoria NPM lub inne rozwiązanie) i~zainstalowanie przez użycie systemu zarządzania pakietami. We frontendowych częściach projektu najczęściej są to NPM i Yarn.
+Rozwiązaniem problemu okazuje się być umieszczeniu tego kodu jedynie jeden raz w zewnętrznym repozytorium (technicznie mogą to być prywatne repozytoria NPM lub inne rozwiązanie) i~zainstalowanie przez użycie systemu zarządzania pakietami. We frontendowych częściach projektu najczęściej są to NPM \cite{npm} i Yarn \cite{yarn}.
 
 Po drugie, komponent skopiowany wprost z jednego mikrofrontendu na drugi, powoduje konieczność powstawania oddzielnych scenariuszy testowych na ten sam komponent dla każdego mikrofrontendu. W praktyce, już przy kilkunastu mikrofrontendach taka ilość testów staje się nie do utrzymania w takim stanie, aby scenariusze odpowiadały aktualnemu stanowi funkcjonalności.
 
@@ -217,7 +212,7 @@ Dla każdego z nich istnieje zestaw zastosowań biznesowych, dla których rozwi�
 \subsection{Konfiguracja serwera używająca routingu}
 Konfigurowanie projektu, aby podawał do przeglądarki kod konkretnego mikrofrontendu w zależności od adresu URL można w prosty sposób wykonać poprzez odpowiednią konfigurację serwera. Taki sposób konfiguracji mkrofrontendów zalicza się do rozwiązań integrujących mikrofrontendy w czasie budowania projektu. To rozwiązanie jest wspierane przez najpopularniejsze oprogramowanie serwerowe takie jak IIS, Apache, NGINX. Konfiguracja serwera działa w bardzo prosty sposób - mapuje adresy URL na nazwy plików istniejących na serwerze oraz w zależności od tego, jaki aktualnie jest adres URL, przypisuje do zmiennej odpowiedni plik HTML. Odnosząc się do przykładu na listingu \cref{lst:nginx_microfrontends} (przykład pochodzi z \cite{fowler_2019}), taką zmienną jest \lstinline{$PAGE} z linii nr 8.
 
-\lstinputlisting[style=htmlcssjs, label=lst:nginx_microfrontends, caption=Przykładowa implementacja mikrofrontendu wspomaganego przez nginx]{listings/nginx_microfrontends.html}
+\lstinputlisting[style=htmlcssjs, label=lst:nginx_microfrontends, caption=Przykładowa implementacja mikrofrontendu wspomaganego przez NGINX]{listings/nginx_microfrontends.html}
 
 \subsection{Elementy <iframe>}
 Najprostszym rozwiązaniem, obecnym już od dawna w standardzie języka znaczników HTML, jest element \lstinline{<iframe>}. Zgodnie z teorią, takie rozwiązanie spełnia założenia mikrofrontendów. Elementy \lstinline{<iframe>} wygodny sposób izolują poszczególne mikrofrontendy od siebie, nie pozwalają na nadpisanie się selektorów CSS oraz ewentualnych zmiennych globalnych w skrpytach JavaScript. Dzieje się tak ze względu na to, że elementy \lstinline{<iframe>} posiadają swój osobny zakres dla styli CSS i kodu JavaScript. Mimo to mają one też kilka wad. Po pierwsze, pełna izolacja kontekstu w elemencie \lstinline{<iframe>} powoduje, że treść tego elementu strony nie będzie reagowała na zmiany w~routingu. Ponadto, operowanie na historii przeglądania, adresie URL jest znacznie utrudnione. Taki koncept sprawia też trudności w przypadku, gdy znaczenie ma responsywność strony. Przykładowa implementacja, pochodząca z \cite{fowler_2019} znajduje się na listingu \cref{lst:iframe_microfrontends}
@@ -267,9 +262,9 @@ Do zrealizowania tej części projektu został wykorzystany język C\# oraz śro
 \end{itemize}
 
 Środowiska mikroserwisowe są de facto oddzielnymi serwisami działającymi jednocześnie i pobierającymi dostępne zasoby. Do celów testów lokalnych na komputerze programisty zachodzi więc potrzeba zastosowania rozwiązania, które zminimalizuje użycie zasobów komputera tak, aby jednocześnie zachować wierność odwzorowania środowiska z~wieloma serwerami. W celu osiągnięcia takiego efektu, zostało użyte oprogramowanie Docker służące do konteneryzacji środowisk. Za jego pomocą, używając specjalnych plików nazywanych obrazami, można tworzyć kontenery, którym Docker przydziela zasoby w czasie rzeczywistym tak, aby zoptymalizować ich użycie.
-Razem z~narzędziem Docker, użyto też narzędzia \textit{docker-compose}, które umożliwia uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu.
+Razem z~narzędziem Docker, użyto też narzędzia Docker Compose \cite{dockercompose}, które umożliwia uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu.
 
-Opisane technologie mogą też być komfortowo używane w połączeniu z~oprogramowaniem Docker służącym do konteneryzacji. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET oraz połączeniem z bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku Dockerfile.
+Opisane technologie mogą też być używane w połączeniu z~oprogramowaniem Docker. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET i bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku Dockerfile.
 
 \section{Szablony projektów}
 W celu zapewnienia skalowalności oraz łatwego tworzenia nowych serwisów, na potrzeby projektu opracowano dwa szablony projektu - zawierający wstępną autentykację użytkownika poprzez sprawdzanie zawartości nagłówka HTTP oraz taki, który jej nie zawiera.
@@ -302,7 +297,7 @@ Serwis ma za zadanie realizację operacji CRUD na transakcjach finansowych. Taki
 
 \chapter{Opis badanych frontendów}
 \section{Dobór technologii do projektów}
-Do realizacji mikrofrontendów użyto biblioteki \textit{Single SPA}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyto frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach potencjalnie rozwlekłą strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
+Do realizacji mikrofrontendów użyto biblioteki \textit{Single SPA}. Wspiera ona wszystkie najpopularniejsze frameworki do tworzenia aplikacji frontendowych. W badanych projektach użyto frameworka Angular ze względu na to, że najlepiej nadaje się do tworzenia dużych skalowalnych aplikacji. Ta cecha pozwoli utrzymać w ryzach rozbudowaną strukturę monolitycznej wersji projektu. W celu zapewnienia jak najmniejszych różnic technologicznych w projektach o różnej architekturze, wersja mikrofrontendowa będzie również używać frameworka Angular.
 
 Do komunikacji z serwisami backendowymi, dla obu projektów użyto klas serwisów wygenerowanych przez generator NSwag. Będzie to działało tak, jak w przypadku klas w~języku C\# generowanych na potrzeby komunikacji między serwisami backendowymi. Różnica będzie tu jedynie taka, że te klasy będą gotowymi klasami w języku TypeScript dostosowanymi do użycia we frameworku Angular.
 
@@ -333,9 +328,11 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
     \item \textit{hide-upload} - do schowania przed użytkownikiem elementów interfejsu realizujących przekazanie pliku
   \end{itemize}
 
-  Implementacja tej funkcjonalności w kodzie została przedstawiona na listingach \cref{lst:mf_communication_files} i \cref{lst:mf_communication_transactions}
+  Implementacja tej funkcjonalności została przedstawiona na listingach \cref{lst:mf_communication_files} i \cref{lst:mf_communication_transactions}
 
   \lstinputlisting[style=es6, label=lst:mf_communication_files, caption=Implementacja komunikacji między mikrofrontendami po stronie \textit{Transaction Microfrontend}]{listings/mf_communiaction_file.ts}
+
+  \vfill
 
   \lstinputlisting[style=es6, label=lst:mf_communication_transactions, caption=Implementacja komunikacji między mikrofrontendami po stronie \textit{File Storage Microfrontend}]{listings/mf_communiaction_transactions.ts}
 
@@ -417,8 +414,8 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \caption{Czasy ładowania aplikacji przy wyczyszczonej pamięci podręcznej przeglądarki}
       \begin{tabular}{l|rrr|}
       \cline{2-4}
-       & \multicolumn{3}{c|}{\textbf{Czas załadowania strony {[}s{]}}} \\ \hline
-      \multicolumn{1}{|l|}{\textbf{Projekt}} & \multicolumn{1}{l|}{\textbf{Widok transakcji}} & \multicolumn{1}{l|}{\textbf{Widok profilu użytkownika}} & \multicolumn{1}{l|}{\textbf{Widok listy rodzin}} \\ \hline
+       & \multicolumn{3}{c|}{\textbf{Czas załadowania widoku {[}s{]}}} \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Projekt}} & \multicolumn{1}{l|}{\textbf{Transakcje}} & \multicolumn{1}{l|}{\textbf{Profil użytkownika}} & \multicolumn{1}{l|}{\textbf{Lista rodzin}} \\ \hline
       \multicolumn{1}{|l|}{\textit{mikrofrontendowy}} & \multicolumn{1}{r|}{1,770} & \multicolumn{1}{r|}{1,460} & 1,770 \\ \hline
       \multicolumn{1}{|l|}{\textit{monolityczny}} & \multicolumn{1}{r|}{0,386} & \multicolumn{1}{r|}{0,322} & 0,327 \\ \hline
       \end{tabular}
@@ -436,9 +433,9 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \caption{Czasy ładowania aplikacji przy bibliotekach w pamięci podręcznej przeglądarki}
       \begin{tabular}{ll|rrr|}
       \cline{3-5}
-       &  & \multicolumn{3}{c|}{\textbf{Czas załadowania strony {[}s{]}}} \\ \hline
-      \multicolumn{1}{|l|}{\textbf{Nr}} & \textbf{Projekt} & \multicolumn{1}{l|}{\textbf{Widok transakcji}} & \multicolumn{1}{l|}{\textbf{Widok profilu użytkownika}} & \multicolumn{1}{l|}{\textbf{Widok listy rodzin}} \\ \hline
-      \multicolumn{1}{|r|}{1} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,407} & 0,445 \\ \hline
+       &  & \multicolumn{3}{c|}{\textbf{Czas załadowania widoku {[}s{]}}} \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Nr}} & \textbf{Projekt} & \multicolumn{1}{l|}{\textbf{Transakcje}} & \multicolumn{1}{l|}{\textbf{Profil użytkownika}} & \multicolumn{1}{l|}{\textbf{Lista rodzin}} \\ \hline
+      \multicolumn{1}{|r|}{\textbf{1}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,407} & 0,445 \\ \hline
       \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,181} & \multicolumn{1}{r|}{0,136} & 0,211 \\ \hline
       \multicolumn{1}{|r|}{\textbf{2}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,351} & 0,441 \\ \hline
       \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,214} & \multicolumn{1}{r|}{0,183} & 0,267 \\ \hline
@@ -567,7 +564,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
 
   Jednak warto zauważyć, że ważny jest sam fakt zaprojektowania aplikacji w taki sposób, aby poszczególne części projektu były możliwie najbardziej niezależne od siebie nawzajem. Na rysunkach \cref{fig:microservices_fe_diagram} i \cref{fig:monolith_fe_modules_diagram} widać, że taki podział jest możliwy w przypadku obu omawianych projektów.
 
-  Prawo Conwaya \cite{conway} mówi o tym, że "każda organizacja, która wytwarza produkt, który jest odwzorowaniem jej struktury organizacyjnej". Oznacza to, że fakt wpływu struktury zarządzania firmy na projekt programistyczny, jest według tego prawa implikacją jednostronną. Można z tego wywnioskować, że niezależnie od tego, nawet projekt zrealizowany przy użyciu mikrofrontendów przy wadliwym zarządzaniu projektem nie uratuje zespołu projektowego od wszystkich czynników, które mają być w~założeniach optymalizowane przez mikrofrontendy.
+  Prawo Conwaya \cite{conway} mówi o tym, że "każda organizacja, wytwarza produkt, który jest odwzorowaniem jej struktury organizacyjnej". Oznacza to, że fakt wpływu struktury zarządzania firmy na projekt programistyczny, jest według tego prawa implikacją jednostronną. Można z tego wywnioskować, że niezależnie od tego, nawet projekt zrealizowany przy użyciu mikrofrontendów przy wadliwym zarządzaniu projektem nie uratuje zespołu projektowego od wszystkich czynników, które mają być w~założeniach optymalizowane przez mikrofrontendy.
 
   Wzrost ilości infrastruktury potrzebnej do utrzymania mikrofrontendów powoduje również zapotrzebowanie na większą ilość osób zajmujących się \textit{inżynierią DevOps}. Zależnie od potrzeb biznesowych, może się też okazać, że potrzebne są dodatkowe godziny spotkań w sprawie infrastruktury mikrofrontendowej, narzędzi potrzebnych do wdrożenia produkcyjnego i deweloperskiego aplikacji. Ten czynnik może spowodować, że mikrofrontendy, które w założeniu miały zoptymalizować komunikację w zespole projektowym, jedynie przeniosą zaoszczędzone w ten sposób godziny robocze na inny obszar projektu, bądź nawet wydłużą w czasie prace nad projektem.
 
