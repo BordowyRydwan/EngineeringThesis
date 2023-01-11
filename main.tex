@@ -148,15 +148,15 @@ Takim sposobem okazało się być dostosowanie frontendowych części projektu d
 \end{figure}
 
 Pojedynczą jednostkę funkcjonalną takiego podziału na frontendzie nazywamy \textit{mikrofrontendem}, a w ogólności architekturę używającą takiego podziału nazywamy architekturą mikrofrontendową.
-Zgodnie z wynikami ankiety przedstawionej w opracowaniu \cite{tsh_2022}, 24.6\% programistów biorących udział w ankiecie pracowało w 2021 roku w zespołach wykorzystujących w~projekcie architekturę mikrofrontendową. Ponadto, według tej ankiety, 37.2\% programistów biorących udział w ankiecie twierdzi, że w przeciągu dwóch następnych lat popularność koncepcji mikrofrontendów wzrośnie. Na podstawie tych statystyk można wnioskować, że pomysł rozszerzenia mikroserwisów na część frontendową przyjął się w~dużej części organizacji oraz przede wszystkim, w świadomości programistów.
+Zgodnie z wynikami ankiety przedstawionej w~opracowaniu \cite{tsh_2022}, 24,6\% programistów biorących udział w ankiecie pracowało w 2021 roku w zespołach wykorzystujących w~projekcie architekturę mikrofrontendową. Ponadto, według tej ankiety, 37,2\% programistów biorących udział w~ankiecie twierdzi, że w~przeciągu dwóch następnych lat popularność koncepcji mikrofrontendów wzrośnie. Na podstawie tych statystyk można wnioskować, że pomysł rozszerzenia mikroserwisów na część frontendową przyjął się w~dużej części organizacji oraz przede wszystkim, w~świadomości programistów.
 
 \section{Dodatkowe ograniczenia względem mikroserwisów}
 \subsection{Ograniczone zasoby obliczeniowe}
 W przypadku prac nad backendowymi częściami projektu, coraz mniej zwraca się uwagę na optymalizację działania algorytmów używanych w oprogramowaniu. Pamięć operacyjna oraz masowa stały się dużo tańsze w przeliczeniu na jednostkę pamięci niż kilka lat temu. Dla klienta stało się tańsze zainwestowanie maksymalnie kilku tysięcy złotych na dołożenie pamięci do serwera, udostępniającego żądaną usługę sieciową, niż zainwestowanie wielokrotności tej kwoty w~czas pracy programistów, którzy zoptymalizują wadliwy algorytmicznie kod.
-Nie ma to jednak zastosowania przy pracy nad frontendem. Przeglądarka, w której koniec końców efekty pracy są pokazane użytkownikowi końcowemu, oferuje jedynie swoje zasoby pamięci - nie można użyć tak dużego odsetka zasobów komputera, jak w przypadku backendu. Poza tym, minimalne odstępstwa od optymalizacji są zauważalne dla użytkownika końcowego. Każde przycięcie się elementów interfejsu, brak płynności powodują irytację użytkownika. Bezpośrednią konsekwencją tej irytacji jest spadek zadowolenia z używania wyprodukowanego oprogramowania. W przypadku zastosowania mikrofrontendów problem narasta. De facto ładujemy do przeglądarki jednocześnie kilka pełnoprawnych aplikacji i wymagamy od nich, aby one wszystkie podzieliły się niewielkimi zasobami pamięci i procesora zaalokowanymi przez przeglądarkę w taki sposób, aby każda z nich działała w sposób komfortowy dla użytkownika. Na szczęście rozwiązanie problemu jest konceptualnie bardzo proste. Wystarczy ładować do przeglądarki tylko te mikrofrontendy, które w danym momencie są użytkownikowi krytycznie potrzebne. Najczęściej stosowanym sposobem implementacji takiego rozwiązania jest ładowanie konkretnych mikrofrontendów po zmianie adresu URL w przeglądarce. Gotowe rozwiązania implementujące mikrofrontendy, takie jak Single SPA \cite{singlespa} optymalizują ładowanie zasobów jeszcze bardziej poprzez zastosowanie wzorca Lazy loading. Dzięki tej prostej sztuczce, można ściśle kontrolować ładowanie się mikrofrontendów do przeglądarki.
+Nie ma to jednak zastosowania przy pracy nad frontendem. Przeglądarka, w której koniec końców efekty pracy są pokazane użytkownikowi końcowemu, oferuje jedynie swoje zasoby pamięci - nie można użyć tak dużego odsetka zasobów komputera, jak w przypadku backendu. Poza tym, minimalne odstępstwa od optymalizacji są zauważalne dla użytkownika końcowego. Każde przycięcie się elementów interfejsu, brak płynności powodują irytację użytkownika. Bezpośrednią konsekwencją tej irytacji jest spadek zadowolenia z używania wyprodukowanego oprogramowania. W~przypadku zastosowania mikrofrontendów problem narasta. De facto wczytujemy do przeglądarki jednocześnie kilka pełnoprawnych aplikacji i wymagamy od nich, aby one wszystkie podzieliły się niewielkimi zasobami pamięci i procesora zaalokowanymi przez przeglądarkę w taki sposób, aby każda z nich działała w sposób komfortowy dla użytkownika. Na szczęście rozwiązanie problemu jest konceptualnie bardzo proste. Wystarczy wczytywać do przeglądarki tylko te mikrofrontendy, które w danym momencie są użytkownikowi krytycznie potrzebne. Najczęściej stosowanym sposobem implementacji takiego rozwiązania jest wczytywanie konkretnych mikrofrontendów po zmianie adresu URL w przeglądarce. Gotowe rozwiązania implementujące mikrofrontendy, takie jak Single SPA \cite{singlespa} optymalizują wczytywanie zasobów jeszcze bardziej poprzez zastosowanie wzorca Lazy loading. Dzięki tej prostej sztuczce, można ściśle kontrolować wczytywanie się mikrofrontendów do przeglądarki.
 
 \subsection{Zasoby współdzielone}
-W przypadku, gdy na potrzeby jednego z mikrofrontendów tworzony jest reużywalny komponent (przykładowo tabela o odpowiednim wyglądzie i zachowaniu), może zaistnieć potrzeba zastosowania takiego komponentu w innym mikrofrontendzie. Wtedy pierwszym z pomysłów, jakie mogą powstać, jest przekopiowanie kodu z jednego do drugiego mikrofrontendu. Jednak to rozwiązanie tworzy nowe problemy.
+W przypadku, gdy na potrzeby jednego z mikrofrontendów wykorzystywany jest istniejący komponent (przykładowo tabela o odpowiednim wyglądzie i zachowaniu), może powstać potrzeba zastosowania takiego komponentu w innym mikrofrontendzie. Wtedy pierwszym z pomysłów, jakie mogą powstać, jest przekopiowanie kodu z jednego do drugiego mikrofrontendu. Jednak to rozwiązanie tworzy nowe problemy.
 
 Po pierwsze, każda zmiana w komponencie, w celu uzgodnienia wersji wymaga zmian w tym samym komponencie we wszystkich mikrofrontendach używających tego projektu. W przypadku kilku mikrofrontendów jest to możliwe, ale w przypadku, gdy mamy takich mikrofrontendów setki lub tysiące, takie cykliczne zmiany są wręcz niemożliwe do wykonania i zabierałyby one duży odsetek czasu poświęconego na projekt.
 Rozwiązaniem problemu okazuje się być umieszczeniu tego kodu jedynie jeden raz w zewnętrznym repozytorium (technicznie mogą to być prywatne repozytoria NPM lub inne rozwiązanie) i~zainstalowanie przez użycie systemu zarządzania pakietami. We frontendowych częściach projektu najczęściej są to NPM i Yarn.
@@ -164,7 +164,7 @@ Rozwiązaniem problemu okazuje się być umieszczeniu tego kodu jedynie jeden ra
 Po drugie, komponent skopiowany wprost z jednego mikrofrontendu na drugi, powoduje konieczność powstawania oddzielnych scenariuszy testowych na ten sam komponent dla każdego mikrofrontendu. W praktyce, już przy kilkunastu mikrofrontendach taka ilość testów staje się nie do utrzymania w takim stanie, aby scenariusze odpowiadały aktualnemu stanowi funkcjonalności.
 
 \subsection{Arkusze styli CSS}
-Arkusze styli z poszczególnych mikrofrontendów są ładowane razem do przeglądarki, na której uruchomiony jest każdy z pożądanych mikrofrontendów. Występuje w takiej sytuacji ryzyko replikacji tych samych styli CSS oraz nadpisywania się styli CSS między mikrofrontendami. Drugi z przypadków jest szczególnie kłopotliwy, gdyż wygląd niektórych elementów na stronie może zależeć wyłącznie od tego, który z mikrofrontendów załaduje się do przeglądarki jako pierwszy. Jest na to kilka rozwiązań:
+Arkusze styli z poszczególnych mikrofrontendów są wczytywane razem do przeglądarki, na której uruchomiony jest każdy z pożądanych mikrofrontendów. Występuje w takiej sytuacji ryzyko replikacji tych samych styli CSS oraz nadpisywania się styli CSS między mikrofrontendami. Drugi z przypadków jest szczególnie kłopotliwy, gdyż wygląd niektórych elementów na stronie może zależeć wyłącznie od tego, który z mikrofrontendów wczytuje się do przeglądarki jako pierwszy. Jest na to kilka rozwiązań:
 
 \begin{itemize}
 	\item stosowanie ogólnej konwencji nazewniczych dla klas CSS, takich jak BEM i OOCSS,
@@ -210,7 +210,7 @@ Społeczność programistów wypracowała kilka funkcjonalnych rozwiązań w zak
 Dla każdego z nich istnieje zestaw zastosowań biznesowych, dla których rozwiązanie nie będzie właściwe, ale będą istnieć też takie, dla których będą one właściwe. Każde z nich zostanie dokładniej omówione w poniższych podsekcjach.
 
 \subsection{Konfiguracja serwera używająca routingu}
-Konfigurowanie projektu, aby podawał do przeglądarki kod konkretnego mikrofrontendu w zależności od adresu URL można w prosty sposób wykonać poprzez odpowiednią konfigurację serwera. Taki sposób konfiguracji mkrofrontendów zalicza się do rozwiązań integrujących mikrofrontendy w czasie budowania projektu. To rozwiązanie jest wspierane przez najpopularniejsze oprogramowanie serwerowe takie jak IIS, Apache, NGINX. Konfiguracja serwera działa w bardzo prosty sposób - mapuje adresy URL na nazwy plików istniejących na serwerze oraz w zależności od tego, jaki aktualnie jest adres URL, przypisuje do zmiennej odpowiedni plik HTML. Odnosząc się do przykładu na listingu \cref{lst:nginx_microfrontends} (przykład pochodzi z \cite{fowler_2019}), taką zmienną jest \lstinline{$PAGE} z linii nr 8.
+Konfigurowanie projektu, aby podawał do przeglądarki kod konkretnego mikrofrontendu w zależności od adresu URL, można w prosty sposób wykonać poprzez odpowiednią konfigurację serwera. Taki sposób konfiguracji mkrofrontendów zalicza się do rozwiązań integrujących mikrofrontendy w czasie budowania projektu. To rozwiązanie jest wspierane przez najpopularniejsze oprogramowanie serwerowe takie jak IIS, Apache, NGINX. Konfiguracja serwera działa w bardzo prosty sposób - mapuje adresy URL na nazwy plików istniejących na serwerze oraz w zależności od tego, jaki aktualnie jest adres URL, przypisuje do zmiennej odpowiedni plik HTML. Odnosząc się do przykładu na listingu \cref{lst:nginx_microfrontends} (przykład pochodzi z \cite{fowler_2019}), taką zmienną jest \lstinline{$PAGE} z linii nr 8.
 
 \lstinputlisting[style=htmlcssjs, label=lst:nginx_microfrontends, caption=Przykładowa implementacja mikrofrontendu wspomaganego przez NGINX]{listings/nginx_microfrontends.html}
 
@@ -220,20 +220,20 @@ Najprostszym rozwiązaniem, obecnym już od dawna w standardzie języka znacznik
 \lstinputlisting[style=htmlcssjs, label=lst:iframe_microfrontends, caption=Przykładowa implementacja mikrofrontendu za pomocą \lstinline{<iframe>}]{listings/iframe_microfrontends.html}
 
 \subsection{Przechowywanie mikrofrontendów w skryptach JavaScript}
-Idea ładowania mikrofrontendów przez podpinanie skryptów JavaScript jest bardzo prosta. Zgodnie z przykładem implementacji podanym na listingu \cref{lst:js_microfrontends} (przykład pochodzi z \cite{fowler_2019}), na początku sekcji \lstinline{<body>} podpiete są trzy skrypty reprezentujące trzy mikrofrontendy. Obecny jest także element \lstinline{<div id="micro-frontend-root">}, do którego będą ładowane mikrofrontendy. W skrypcie podanym niżej znajduje się przyporządkowanie tras w routingu do mikrofrontendów o odpowiednich nazwach oraz referencja na element \lstinline{<div id="micro-frontend-root">}.
+Idea wczytywania mikrofrontendów przez podpinanie skryptów JavaScript jest bardzo prosta. Zgodnie z przykładem implementacji podanym na listingu \cref{lst:js_microfrontends} (przykład pochodzi z \cite{fowler_2019}), na początku sekcji \lstinline{<body>} podpiete są trzy skrypty reprezentujące trzy mikrofrontendy. Obecny jest także element \lstinline{<div id="micro-frontend-root">}, do którego będą wczytywane mikrofrontendy. W skrypcie podanym niżej znajduje się przyporządkowanie tras w routingu do mikrofrontendów o odpowiednich nazwach oraz referencja na element \lstinline{<div id="micro-frontend-root">}.
 
 \lstinputlisting[style=htmlcssjs, label=lst:js_microfrontends, caption=Przykładowa implementacja mikrofrontendu za pomocą JavaScript]{listings/microfrontends.html}
 
-\subsection{Dynamiczne ładowanie modułów poprzez menedżer pakietów}
-Istnieje również grupa rozwiązań oparta na dynamicznym ładowaniu modułów. Do grupy rozwiązań tego typu należą wspomniane na wykresie procentowym z  \cref{fig:tsh_frontend_implementations}, Module Federation, Bit oraz Systemjs. Pierwsze z rozwiązań, Module Federation, jest wtyczką do transpilatora Webpack. Wszystkie trzy, pomimo pewnych niewielkich różnic w~zakresie składni poleceń, instalacji i procesu konfiguracji, działają bardzo podobnie.
+\subsection{Dynamiczne wczytywanie modułów poprzez menedżer pakietów}
+Istnieje również grupa rozwiązań oparta na dynamicznym wczytywaniu modułów. Do grupy rozwiązań tego typu należą wspomniane na wykresie procentowym z  \cref{fig:tsh_frontend_implementations}, Module Federation, Bit oraz Systemjs. Pierwsze z rozwiązań, Module Federation, jest wtyczką do transpilatora Webpack. Wszystkie trzy, pomimo pewnych niewielkich różnic w~zakresie składni poleceń, instalacji i procesu konfiguracji, działają bardzo podobnie.
 
 \subsection{Single SPA}
-Single SPA jest frameworkiem, za pomocą którego można zrealizować koncepcję mikrofrontendów. Ten framework czerpie swój sposób działania z rozwiązań opartych na dynamicznym ładowaniu modułów. Jednocześnie pod skórą, ten framework stosuje wspomniany wcześniej Systemjs do samego przygotowania modułów, które są później dynaminicznie ładowane do treści strony. Istnieje też więc możliwość używania Single SPA z~każdym innym popularnym frameworkiem stosowanym przez programistów frontendu. Innowacją, którą proponuje Single SPA są predefiniowane konfiguracje, które automatyzują tworzenie mikrofrontedów. Do celów automatyzacji ustawiania infrastruktury mikrofrontendów twórcy udostępniają narzędzie CLI o nazwie \textit{create-single-spa}. Single SPA narzuca też sam z siebie określony podział konkrentych mikrofrontendów ze względu na zastosowania. Składnikami tego podziału są:
+Single SPA jest frameworkiem, za pomocą którego można zrealizować koncepcję mikrofrontendów. Ten framework czerpie swój sposób działania z rozwiązań opartych na dynamicznym wczytywaniu modułów. Jednocześnie pod skórą, ten framework stosuje wspomniany wcześniej Systemjs do samego przygotowania modułów, które są później dynaminicznie wczytywane do treści strony. Istnieje też więc możliwość używania Single SPA z~każdym innym popularnym frameworkiem stosowanym przez programistów frontendu. Innowacją, którą proponuje Single SPA są predefiniowane konfiguracje, które automatyzują tworzenie mikrofrontedów. Do celów automatyzacji ustawiania infrastruktury mikrofrontendów twórcy udostępniają narzędzie CLI o nazwie \textit{create-single-spa}. Single SPA narzuca też sam z siebie określony podział konkrentych mikrofrontendów ze względu na zastosowania. Składnikami tego podziału są:
 
 \begin{itemize}
 	\item \textit{root-config} - mikrofrontend mający zastosowanie głównie przy agregacji innych mikrofrontendów,
 	\item \textit{application} - domyślny typ mikrofrontendu bez specjalnych zadań projektowych,
-	\item \textit{parcel} - reużywalny komponent, który jest niezależny w konstrukcji od frameworków używanych w projekcie; w przypadku użycia tylko jednego frameworka w całym projekcie, twórcy rekomendują \cite{singlespa-parcels} poleganie na systemie komponentyzacji tego frameworka.
+	\item \textit{parcel} - komponent wielokrotnego użycia, który jest niezależny w konstrukcji od frameworków używanych w projekcie; w przypadku użycia tylko jednego frameworka w całym projekcie, twórcy rekomendują \cite{singlespa-parcels} poleganie na systemie komponentyzacji tego frameworka.
 \end{itemize}
 
 Oprócz wymienionych możliwości, framework Single SPA udostępnia swój interfejs do testów jednostkowych i testów E2E oraz wspiera renderowanie kodu strony po stronie serwera. Dokumentacja frameworka Single SPA zawiera bardzo dokładne instrukcje postawienia środowiska oraz wdrożenia produkcyjnego pod każdy z popularnych frameworków, co znacząco obniża próg wejścia w samą koncepcję mikrofrontendów.
@@ -250,6 +250,8 @@ Na potrzeby porównania obu architektur stworzona została aplikacja do zarządz
 
 Podany zestaw funkcjonalności umożliwi wydzielenie kilku mikroserwisów, co zapewni wystarczającą bazę do symulowania połączeń między serwisami. Wykonanie jej w~architekturze ściśle mikroserwisowej pozwoli jednocześnie dobudować do tych mikroserwisów poszczególne mikrofrontendy tak, aby stanowiły one razem pełnoprawne aplikacje komunikujące się między sobą. Z drugiej strony pozwoli to też dobudować monolityczny frontend, który będzie komunikował się ze wszystkimi serwisami. Dzięki takiemu posunięciu, dla obu badanych projektów - monolitycznego oraz mikrofrotendowego, zapewnione będą jednolite warunki w zakresie komunikacji z~backendem, co będzie stanowiło bazę do porównania obu koncepcji architektonicznych w~zakresie wydajności i dostępności.
 
+Kody źródłowe projektu prezentowanego w pracy znajdują się na serwisie GitHub pod adresem \url{https://github.com/BordowyRydwan/Midas.ProjectSetup}.
+
 \chapter{Opis backendu projektu}
 \section{Dobór technologii do projektu}
 Do zrealizowania tej części projektu został wykorzystany język C\# oraz środowisko .NET. Użyto środowiska .NET w wersji 6.0, która jest jednocześnie najnowszą dostępną wersją LTS (\textit{Long Term Support}). Wspomniane technologie są dobrym wyborem do realizacji mikroserwisów ze względu na:
@@ -265,6 +267,8 @@ Do zrealizowania tej części projektu został wykorzystany język C\# oraz śro
 Razem z~narzędziem Docker, użyto też narzędzia Docker Compose \cite{dockercompose}, które umożliwia uruchomienie wielu kontenerów Dockera za pomocą pojedynczego skryptu.
 
 Opisane technologie mogą też być używane w połączeniu z~oprogramowaniem Docker. Producent środowiska .NET, Microsoft udostępnił w serwisie Docker Hub obraz środowiska .NET z ustawionym frameworkiem ASP.NET i bazą SQL Server. Pozwala to na skorzystanie z gotowego środowiska, które jest konfigurowalne za pomocą pliku Dockerfile.
+
+
 
 \section{Szablony projektów}
 W celu zapewnienia skalowalności oraz łatwego tworzenia nowych serwisów, na potrzeby projektu opracowano dwa szablony projektu - zawierający wstępną autentykację użytkownika poprzez sprawdzanie zawartości nagłówka HTTP oraz taki, który jej nie zawiera.
@@ -307,7 +311,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   Logika frontendu aplikacji została podzielona na następujące mikrofrontendy:
 
   \begin{itemize}
-    \item kontener (Container Microfrontend) - jest mikrofrontendem, do którego są ładowane wszystkie inne mikrofrontendy; jego zadaniem jest rozmieszczenie mikrofrontendów na stronie internetowej oraz kontrola ich ładowania poprzez reagowanie na zmiany w~routingu
+    \item kontener (Container Microfrontend) - jest mikrofrontendem, do którego są wczytywane wszystkie inne mikrofrontendy; jego zadaniem jest rozmieszczenie mikrofrontendów na stronie internetowej oraz kontrola ich wczytywania poprzez reagowanie na zmiany w~routingu
     \item nawigacja (Navigation Microfrontend) - jest odpowiedzialny za ubranie możliwości przełączania się pomiędzy mikrofrontendami w sposób przyjazny dla użytkownika
     \item hosting plików (File Storage Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią hostingu plików wspomnianą w rozdziale 4.3.1
     \item autoryzacja (Authorization Microfrontend) - jego głównym zadaniem jest komunikacja z backendową częścią autoryzacji wspomnianą w~rozdziale 4.3.2.
@@ -345,7 +349,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   W linii 13, pobierany jest parametr z adresu URL, który w module realizującym routing aplikacji nazwano \textit{guid}. Ten parametr jest następnie sprawdzany za pomocą metody \lstinline{checkIfGuidIsValid}, która sprawdza czy parametr został poprawnie podany do komponentu. Następnie pobierany jest plik z odpowedniego serwisu za pomocą metody \lstinline{sendDownloadRequest}, a potem ten plik jest pobierany z komponentu na dysk użytkownika za pośrednictwem przeglądarki w metodzie \lstinline{downloadFile}.
 
 \chapter{Porównanie projektów frontendowych}
-  W celu zapewnienia jak największej zgodności między oboma projektami, tam gdzie jest to możliwe, logika komponentów w obu projektach jest dokładnie taka sama. W innych przypadkach, dokonano możliwie jak najprostszych korekt, aby oba projekty się skompilowały. Ponad to, w pliku \textit{angular.json} w każdym z mikrofrontendów dopisano do konfiguracji Webpacka opcję \lstinline{"excludeAngularDependencies": true}, co pozwoliło na to, żeby nie importować zależności frameworka Angular za każdym zbudowaniem aplikacji. Zamiast tego, te pliki są ładowane z repozytoriów CDN, do których dane zapisano w \textit{Container Microfrontend} w folderze \lstinline{import_maps}.
+  W celu zapewnienia jak największej zgodności między oboma projektami, tam gdzie jest to możliwe, logika komponentów w obu projektach jest dokładnie taka sama. W innych przypadkach, dokonano możliwie jak najprostszych korekt, aby oba projekty się skompilowały. Ponad to, w pliku \textit{angular.json} w każdym z mikrofrontendów dopisano do konfiguracji Webpacka opcję \lstinline{"excludeAngularDependencies": true}, co pozwoliło na to, żeby nie importować zależności frameworka Angular za każdym zbudowaniem aplikacji. Zamiast tego, te pliki są wczytywane z repozytoriów CDN, do których dane zapisano w \textit{Container Microfrontend} w folderze \lstinline{import_maps}.
 
   \section{Metryki kodu}
     \subsection{Ilość kodu}
@@ -406,15 +410,15 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
 
     Wyniki z \cref{table:build_times} pokazują, że łączny czas budowania całego projektu jest 183\% większy dla projektu mikrofrontendowego niż dla projektu z monolitycznym frontendem. Rozmiar paczki wynikowej w projekcie mikrofrontendowym jest o 104\% większy niż dla projektu monolitycznego. Należy zaznaczyć, że nie wynika z tego jeszcze, że przeglądarka użytkownika będzie musiała jednorazowo pobrać więcej danych, aby aplikacja poprawnie działała.
 
-    \subsection{Czas ładowania aplikacji do przeglądarki internetowej}
-    W celu wykonania testów czasu ładowania aplikacji do przeglądarki przeprowadzono test ładowania witryny na niektórych widokach z wyczyszczoną uprzednio pamięcią podręczną. Ten test oraz kolejne wykonano na 64-bitowej przeglądarce Chrome w wersji 108, na systemie operacyjnym Linux Mint. Wyniki są pokazane w \cref{table:runtimes_without_cache}.
+    \subsection{Czas wczytywania aplikacji do przeglądarki internetowej}
+    W celu wykonania testów czasu wczytywania aplikacji do przeglądarki przeprowadzono test wczytywania witryny na niektórych widokach z wyczyszczoną uprzednio pamięcią podręczną. Ten test oraz kolejne wykonano na 64-bitowej przeglądarce Chrome w wersji 108, na systemie operacyjnym Linux Mint. Wyniki są pokazane w \cref{table:runtimes_without_cache}.
 
     \begin{table}[h]
       \centering
-      \caption{Czasy ładowania aplikacji przy wyczyszczonej pamięci podręcznej przeglądarki}
+      \caption{Czasy wczytywania aplikacji przy wyczyszczonej pamięci podręcznej przeglądarki}
       \begin{tabular}{l|rrr|}
       \cline{2-4}
-       & \multicolumn{3}{c|}{\textbf{Czas załadowania widoku {[}s{]}}} \\ \hline
+       & \multicolumn{3}{c|}{\textbf{Czas wczytywania widoku {[}s{]}}} \\ \hline
       \multicolumn{1}{|l|}{\textbf{Projekt}} & \multicolumn{1}{l|}{\textbf{Transakcje}} & \multicolumn{1}{l|}{\textbf{Profil użytkownika}} & \multicolumn{1}{l|}{\textbf{Lista rodzin}} \\ \hline
       \multicolumn{1}{|l|}{\textit{mikrofrontendowy}} & \multicolumn{1}{r|}{1,770} & \multicolumn{1}{r|}{1,460} & 1,770 \\ \hline
       \multicolumn{1}{|l|}{\textit{monolityczny}} & \multicolumn{1}{r|}{0,386} & \multicolumn{1}{r|}{0,322} & 0,327 \\ \hline
@@ -422,18 +426,18 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \label{table:runtimes_without_cache}
     \end{table}
 
-    Z pustą pamięcią podręczną widok transakcji oraz widok profilu użytkownika w~projekcie mikrofrontendowym ładują się do przeglądarki ponad 4 razy wolniej, a widok listy rodzin ponad 5 razy wolniej. Jest to efekt tego, że przy pustej pamięci podręcznej, skrypt pobiera biblioteki przy użyciu podanego wcześniej pliku z odnośnikami do zewnętrznych bibliotek.
+    Z pustą pamięcią podręczną widok transakcji oraz widok profilu użytkownika w~projekcie mikrofrontendowym wczytują się do przeglądarki ponad cztery razy wolniej, a~widok listy rodzin ponad pięć razy wolniej. Jest to efekt tego, że przy pustej pamięci podręcznej, skrypt pobiera biblioteki przy użyciu podanego wcześniej pliku z odnośnikami do zewnętrznych bibliotek.
 
-    Wykonano też po 10 uruchomień aplikacji w obu omawianych projektach i zmierzono czasy ładowania tych samych widoków, co w poprzednim teście. Następnie wyznaczono dla obu projektów średnią ze wszystkich pomiarów. W tym przypadku jednak, skorzystano z~tego, że zewnętrzne biblioteki są załadaowane do pamięci podręcznej przeglądarki. Wyniki pomiarów przedstawia \cref{table:runtimes_with_cache}.
+    Wykonano też po dziesięć uruchomień aplikacji w obu omawianych projektach i~zmierzono czasy wczytywania tych samych widoków, co w poprzednim teście. Następnie wyznaczono dla obu projektów średnią ze wszystkich pomiarów. W tym przypadku jednak, skorzystano z~tego, że zewnętrzne biblioteki są wczytane do pamięci podręcznej przeglądarki. Wyniki pomiarów przedstawia \cref{table:runtimes_with_cache}.
     
     \vfill
 
     \begin{table}[]
       \centering
-      \caption{Czasy ładowania aplikacji przy bibliotekach w pamięci podręcznej przeglądarki}
+      \caption{Czasy wczytywania aplikacji przy bibliotekach w pamięci podręcznej przeglądarki}
       \begin{tabular}{ll|rrr|}
       \cline{3-5}
-       &  & \multicolumn{3}{c|}{\textbf{Czas załadowania widoku {[}s{]}}} \\ \hline
+       &  & \multicolumn{3}{c|}{\textbf{Czas wczytywania widoku {[}s{]}}} \\ \hline
       \multicolumn{1}{|l|}{\textbf{Nr}} & \textbf{Projekt} & \multicolumn{1}{l|}{\textbf{Transakcje}} & \multicolumn{1}{l|}{\textbf{Profil użytkownika}} & \multicolumn{1}{l|}{\textbf{Lista rodzin}} \\ \hline
       \multicolumn{1}{|r|}{\textbf{1}} & \textit{mikrofrontendowy} & \multicolumn{1}{r|}{0,402} & \multicolumn{1}{r|}{0,407} & 0,445 \\ \hline
       \multicolumn{1}{|l|}{\textbf{}} & \textit{monolityczny} & \multicolumn{1}{r|}{0,181} & \multicolumn{1}{r|}{0,136} & 0,211 \\ \hline
@@ -461,7 +465,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \label{table:runtimes_with_cache}
     \end{table}
 
-    Wyniki pokazują, że średnio aplikacja ładuje się wolniej w projekcie mikrofrontendowym niż w projekcie monolitycznym o następujące wartości w punktach procentowych:
+    Wyniki pokazują, że średnio aplikacja wczytuje się wolniej w projekcie mikrofrontendowym niż w projekcie monolitycznym o następujące wartości w punktach procentowych:
 
     \begin{itemize}
       \item widok transakcji - 125\%
@@ -469,7 +473,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
       \item widok listy rodzin - 118\%
     \end{itemize}
 
-    Oba testy pokazują, że pod względem ładowania aplikacji do przeglądarki, lepsze osiągi prezentuje projekt monolityczny. Nie pomaga w tym zakresie wcześniej zastosowana i~sugerowana w dokumentacji \cite{singlespa} optymalizacja pod względem ładowania dla wszystkich mikrofrontendów z zewnętrznych źródeł.
+    Oba testy pokazują, że pod względem wczytywania aplikacji do przeglądarki, lepsze osiągi prezentuje projekt monolityczny. Nie pomaga w tym zakresie wcześniej zastosowana i~sugerowana w dokumentacji \cite{singlespa} optymalizacja pod względem wczytywania dla wszystkich mikrofrontendów z zewnętrznych źródeł.
 
   \section{Rozkład architektoniczny projektu}
   Schematy projektów obu aplikacji znajdują się na poniższych rysunkach. Na \cref{fig:monolith_fe_diagram}, zielone prostokąty odzwierciedlają mikrofrontendy realizujące konkretne funkcjonalności, natomiast kontener oznaczono kolorem szarym. Na \cref{fig:microservices_fe_diagram}, cały frontend monolityczny jest oznaczony kolorem szarym.
@@ -569,7 +573,7 @@ Ze względu na to, że walory estetyczne nie są istotne w zakresie rozważań n
   Wzrost ilości infrastruktury potrzebnej do utrzymania mikrofrontendów powoduje również zapotrzebowanie na większą ilość osób zajmujących się \textit{inżynierią DevOps}. Zależnie od potrzeb biznesowych, może się też okazać, że potrzebne są dodatkowe godziny spotkań w sprawie infrastruktury mikrofrontendowej, narzędzi potrzebnych do wdrożenia produkcyjnego i deweloperskiego aplikacji. Ten czynnik może spowodować, że mikrofrontendy, które w założeniu miały zoptymalizować komunikację w zespole projektowym, jedynie przeniosą zaoszczędzone w ten sposób godziny robocze na inny obszar projektu, bądź nawet wydłużą w czasie prace nad projektem.
 
 \chapter{Podsumowanie}
-Pod względem osiągów technicznych, na wszystkich zaprezentowanych polach lepiej prezentuje się projekt wykonany w architekturze monolitycznej. Zawartość aplikacji pojawia się szybciej na ekranie użytkownika w tym projekcie oraz przy procesie ładowania zawartości pobierana jest mniejsza ilość danych. Jest możliwe, że dla większej skali projektu, wyniki są inne.
+Pod względem osiągów technicznych, na wszystkich zaprezentowanych polach lepiej prezentuje się projekt wykonany w architekturze monolitycznej. Zawartość aplikacji pojawia się szybciej na ekranie użytkownika w tym projekcie oraz przy procesie wczytywania zawartości pobierana jest mniejsza ilość danych. Jest możliwe, że dla większej skali projektu, wyniki są inne.
 
 Projekt monolityczny generuje również mniej plików oraz mniej linii kodu. Jednak pojedyncza aplikacja mikrofrontendowa buduje się szybciej niż cały projekt monolityczny. Powoduje to, że po dokonaniu zmiany w projekcie, szybsze będzie zbudowanie tego mikrofrontendu, który zawierał zmianę niż całego monolitu - zwiększa to potencjalnie komfort pracy nad projektem, a w dużej skali może zaowocować oszczędnością na czasie. Pod tym względem, mikrofrontendowy projekt oferuje więcej niż monolityczny.
 
